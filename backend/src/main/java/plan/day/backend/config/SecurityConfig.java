@@ -20,12 +20,12 @@ import plan.day.backend.security.JwtAuthenticationFilter;
 import plan.day.backend.service.CustomUserDetailsService;
 
 @Configuration
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(
-//    securedEnabled = true,
-//    jsr250Enabled = true,
-//    prePostEnabled = true
-//)
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(
+    securedEnabled = true,
+    jsr250Enabled = true,
+    prePostEnabled = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
