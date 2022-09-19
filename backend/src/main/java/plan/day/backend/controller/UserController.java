@@ -1,6 +1,7 @@
 package plan.day.backend.controller;
 
 import io.swagger.annotations.Api;
+import java.time.Instant;
 import java.util.Collections;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import plan.day.backend.model.Role;
 import plan.day.backend.model.User;
 import plan.day.backend.payload.request.LoginRequest;
 import plan.day.backend.payload.request.SignupRequest;
-import plan.day.backend.payload.response.ApiResponse;
+import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.payload.response.JwtAuthenticationResponse;
 import plan.day.backend.repository.RoleRepository;
 import plan.day.backend.repository.UserRepository;
@@ -64,17 +65,18 @@ public class UserController {
   @PostMapping("/signup")
   public ResponseEntity<?> register(@Valid @RequestBody SignupRequest signupRequest){
     if (userRepository.existsByUsername(signupRequest.getUsername())) {
-      return new ResponseEntity<>(new ApiResponse(false, "Username already registered!"),
+      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"),
           HttpStatus.BAD_REQUEST);
     }
     System.out.println("Aaa");
     User user = new User(signupRequest.getUsername(), signupRequest.getPassword());
     user.setPassword(passwordEncoder.encode(user.getPassword()));
+    user.setCreateDate(Instant.now());
     Role userRole = roleRepository.findByName(RoleName.USER)
         .orElseThrow(() -> new CommonException("User Role not set."));
     user.setRoles(Collections.singleton(userRole));
     User savedUser = userRepository.save(user);
-    return ResponseEntity.ok(new ApiResponse(true, "User registered!"));
+    return ResponseEntity.ok(new GeneralApiResponse(true, "User registered!"));
   }
 
 
