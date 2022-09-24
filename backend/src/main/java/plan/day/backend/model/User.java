@@ -1,9 +1,7 @@
 package plan.day.backend.model;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -29,6 +27,10 @@ public class User {
   @NotBlank
   @Size(max = 100)
   private String password;
+
+  private Integer gender;
+
+  private String avatar;
 
   @CreatedDate
   private Instant createDate;
