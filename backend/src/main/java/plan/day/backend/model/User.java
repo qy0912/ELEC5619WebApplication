@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
+import plan.day.backend.enums.Theme;
 
 @Data
 @Entity
@@ -31,6 +32,9 @@ public class User {
   private Integer gender;
 
   private String avatar;
+
+  @Enumerated(EnumType.STRING)
+  private Theme theme;
 
   @CreatedDate
   private Instant createDate;
