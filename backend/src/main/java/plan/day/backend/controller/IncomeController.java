@@ -10,7 +10,9 @@ import plan.day.backend.payload.request.AddIncomeRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.service.IncomeService;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Api("Income")
 @RestController
@@ -36,10 +38,13 @@ public class IncomeController {
     public ResponseEntity<?> getIncome(
             @CurrentUser CustomUserDetails userDetails) {
 
-        List<Income> income = incomeService.listIncome(userDetails);
-        if (income == null) {
-            return ResponseEntity.ok(new GeneralApiResponse(false, "Failed to create transaction."));
+        List<Income> income = incomeService.listIncome();
+        List<Income> res = new ArrayList<>();
+        for(int i = 0;i< income.size();i++){
+            if (income.get(i).getUser().getId()== userDetails.getId()){
+                res.add(income.get(i));
+            }
         }
-        return ResponseEntity.ok(new GeneralApiResponse(true, "Create transaction successfully!"));
+        return ResponseEntity.ok(income);
     }
 }
