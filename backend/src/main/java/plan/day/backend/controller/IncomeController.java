@@ -38,13 +38,8 @@ public class IncomeController {
     public ResponseEntity<?> getIncome(
             @CurrentUser CustomUserDetails userDetails) {
 
-        List<Income> income = incomeService.listIncome();
-        List<Income> res = new ArrayList<>();
-        for(int i = 0;i< income.size();i++){
-            if (income.get(i).getUser().getId()== userDetails.getId()){
-                res.add(income.get(i));
-            }
-        }
+        List<Income> income = incomeService.listIncome(userDetails.getId());
+
         return ResponseEntity.ok(income);
     }
 }

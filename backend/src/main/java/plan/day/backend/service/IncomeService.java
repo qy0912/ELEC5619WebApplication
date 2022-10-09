@@ -37,7 +37,7 @@ public class IncomeService {
     }
 
     @ResponseBody
-    public List<Income> listIncome() {
-        return incomeRepository.findAll();
+    public List<Income> listIncome(Long id) {
+        return incomeRepository.findAllByuser_id(id);
     }
 }
