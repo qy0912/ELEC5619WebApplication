@@ -10,11 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import plan.day.backend.annotation.CurrentUser;
 import plan.day.backend.model.CustomUserDetails;
@@ -67,7 +63,7 @@ public class UserController {
     return ResponseEntity.ok(new GeneralApiResponse(false, "User register failed."));
   }
 
-  @PostMapping("/modify")
+  @PutMapping("/modify")
   public ResponseEntity<?> modify(@Valid @RequestBody UserModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
     User modifyUser = userService.modifyUser(userModifyRequest, userDetails);
     if (modifyUser!= null) {
@@ -84,6 +80,5 @@ public class UserController {
     }
     return ResponseEntity.ok(new GeneralApiResponse(false, "Upload Failed."));
   }
-
 
 }
