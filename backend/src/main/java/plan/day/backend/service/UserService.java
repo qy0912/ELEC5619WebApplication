@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import plan.day.backend.enums.RoleName;
+import plan.day.backend.enums.Theme;
 import plan.day.backend.exception.CommonException;
 import plan.day.backend.model.CustomUserDetails;
 import plan.day.backend.model.Role;
@@ -59,6 +60,8 @@ public class UserService {
         new UsernameNotFoundException("User not found!"));
     user.setUsername(userModifyRequest.getUsername());
     user.setGender(userModifyRequest.getGender());
+    user.setTheme(userModifyRequest.getTheme());
+
     return userRepository.save(user);
   }
 
