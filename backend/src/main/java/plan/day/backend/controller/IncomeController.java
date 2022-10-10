@@ -29,9 +29,9 @@ public class IncomeController {
 
         Income income = incomeService.addIncome(addIncomeRequest,userDetails);
         if (income == null) {
-            return ResponseEntity.ok(new GeneralApiResponse(false, "Failed to create transaction."));
+            return ResponseEntity.ok(new GeneralApiResponse(false, "Failed to create income."));
         }
-        return ResponseEntity.ok(new GeneralApiResponse(true, "Create transaction successfully!"));
+        return ResponseEntity.ok(new GeneralApiResponse(true, "Create income successfully!"));
     }
 
     @GetMapping("/")
