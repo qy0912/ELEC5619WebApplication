@@ -7,6 +7,7 @@ import plan.day.backend.annotation.CurrentUser;
 import plan.day.backend.model.CustomUserDetails;
 import plan.day.backend.model.Income;
 import plan.day.backend.payload.request.AddIncomeRequest;
+import plan.day.backend.payload.request.TimeFilterRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.service.IncomeService;
 import javax.validation.Valid;
@@ -39,7 +40,18 @@ public class IncomeController {
             @CurrentUser CustomUserDetails userDetails) {
 
         List<Income> income = incomeService.listIncome(userDetails.getId());
-
         return ResponseEntity.ok(income);
+    }
+
+    @PostMapping("/with_date")
+    public ResponseEntity<?> getIncomeWithDate(
+            @Valid @RequestBody TimeFilterRequest timefilterrequest,
+            @CurrentUser CustomUserDetails userDetails) {
+
+        Income income = incomeService.addIncome(addIncomeRequest,userDetails);
+        if (income == null) {
+            return ResponseEntity.ok(new GeneralApiResponse(false, "Failed to create transaction."));
+        }
+        return ResponseEntity.ok(new GeneralApiResponse(true, "Create transaction successfully!"));
     }
 }

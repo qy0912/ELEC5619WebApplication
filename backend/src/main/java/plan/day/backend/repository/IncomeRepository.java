@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IncomeRepository extends JpaRepository<Income, Long> {
-
     List<Income> findAllByuser_id(long id);
 
+    @Override
+    List<Income> findAll();
 }
