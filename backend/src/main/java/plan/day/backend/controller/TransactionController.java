@@ -5,16 +5,16 @@ import io.swagger.annotations.ApiResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import plan.day.backend.annotation.CurrentUser;
 import plan.day.backend.model.CustomUserDetails;
+import plan.day.backend.model.Income;
 import plan.day.backend.model.Transaction;
 import plan.day.backend.payload.request.TransactionCreateRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.service.TransactionService;
+
+import java.util.List;
 
 @Api("Transaction CRUD")
 @RestController
@@ -34,6 +34,15 @@ public class TransactionController {
       return ResponseEntity.ok(new GeneralApiResponse(false, "Failed to create transaction."));
     }
     return ResponseEntity.ok(new GeneralApiResponse(true, "Create transaction successfully!"));
+  }
+
+  @GetMapping("/")
+  public ResponseEntity<?> getTransaction(
+          @CurrentUser CustomUserDetails userDetails) {
+
+    List<Transaction> transaction  = transactionService.listTransaction(userDetails.getId());
+
+    return ResponseEntity.ok(transaction);
   }
 
 }
