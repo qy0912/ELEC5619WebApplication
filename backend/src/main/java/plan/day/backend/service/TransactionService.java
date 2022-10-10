@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 import plan.day.backend.model.*;
 import plan.day.backend.payload.request.TransactionCreateRequest;
-import plan.day.backend.repository.CategoryRepositry;
+import plan.day.backend.repository.CategoryRepository;
 import plan.day.backend.repository.TransactionRepository;
 import plan.day.backend.repository.UserRepository;
 
@@ -24,26 +24,29 @@ public class TransactionService {
   TransactionRepository transactionRepository;
 
   @Autowired
-  CategoryRepositry categoryRepositry;
+  CategoryRepository categoryRepository;
 
   public Transaction createTransaction(TransactionCreateRequest transactionCreateRequest, CustomUserDetails userDetails) {
     Transaction transaction = new Transaction();
     BeanUtils.copyProperties(transactionCreateRequest, transaction);
     User user = userRepository.findById(userDetails.getId()).orElseThrow(() ->
         new UsernameNotFoundException("User not found!"));
-    String category_name = "FOOD";
+    String category_name = "Food";
     String description = "Use in daily life, eat";
-    try {
-      Category category = categoryRepositry.findBycategory_name(category_name);
-      transaction.setCategory(category);
-    }
-    catch (Exception e){
-      Category category = new Category();
-      category.setCategory_name(category_name);
-      category.setDescription(description);
-      categoryRepositry.save(category);
-      transaction.setCategory(category);
-    }
+
+      if(category_name == "MOOD"){
+        Category category = categoryRepository.findAll().get(0);
+        transaction.setCategory(category);
+
+      }
+      else{
+        Category newCategory = new Category();
+        newCategory.setCategory_name(category_name);
+        newCategory.setDescription(description);
+        categoryRepository.save(newCategory);
+        transaction.setCategory(newCategory);
+      }
+
     transaction.setUser(user);
     transaction.setCreateDate(Instant.now());
     return transactionRepository.save(transaction);

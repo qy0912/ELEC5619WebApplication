@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import plan.day.backend.model.Category;
 import plan.day.backend.model.Income;
 
-public interface CategoryRepositry extends JpaRepository<Category,Long> {
+import java.util.List;
 
-    Category findBycategory_name(String category_name);
+public interface CategoryRepository extends JpaRepository<Category,String> {
+
+//    List<Category> findAll();
 }
