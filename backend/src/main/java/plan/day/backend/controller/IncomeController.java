@@ -35,6 +35,16 @@ public class IncomeController {
         return ResponseEntity.ok(new GeneralApiResponse(true, "Create transaction successfully!"));
     }
 
+    @PostMapping("/filter")
+    public ResponseEntity<?> getIncomeWithDate(
+            @Valid @RequestBody TimeFilterRequest timefilterrequest,
+            @CurrentUser CustomUserDetails userDetails) {
+
+        List<Income> income = incomeService.listIncomeWithDate(timefilterrequest,userDetails);
+
+        return ResponseEntity.ok(income);
+    }
+
     @GetMapping("/")
     public ResponseEntity<?> getIncome(
             @CurrentUser CustomUserDetails userDetails) {
@@ -43,15 +53,5 @@ public class IncomeController {
         return ResponseEntity.ok(income);
     }
 
-    @PostMapping("/with_date")
-    public ResponseEntity<?> getIncomeWithDate(
-            @Valid @RequestBody TimeFilterRequest timefilterrequest,
-            @CurrentUser CustomUserDetails userDetails) {
 
-        Income income = incomeService.addIncome(addIncomeRequest,userDetails);
-        if (income == null) {
-            return ResponseEntity.ok(new GeneralApiResponse(false, "Failed to create transaction."));
-        }
-        return ResponseEntity.ok(new GeneralApiResponse(true, "Create transaction successfully!"));
-    }
 }

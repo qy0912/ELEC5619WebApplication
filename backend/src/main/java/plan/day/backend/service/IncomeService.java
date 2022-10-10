@@ -55,8 +55,8 @@ public class IncomeService {
         IncomeSpeccification spec2 =
                 new IncomeSpeccification(new SearchCriteria("create_date", "<", finish));
 
-        List<User> results = incomeRepository.findAll(Specification.where(spec1).and(spec2));
-
+        List<Income> results = incomeRepository.findAll(Specification.where(spec1).and(spec2));
+        return results;
     }
 
 
