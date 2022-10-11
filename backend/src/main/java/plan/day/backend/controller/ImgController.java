@@ -1,30 +1,22 @@
 package plan.day.backend.controller;
 
-
-
-import com.alibaba.fastjson.JSONObject;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-import org.springframework.http.HttpEntity;
-
-
 import io.swagger.annotations.Api;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
 import plan.day.backend.payload.request.ImageRecognizeRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
+import plan.day.backend.util.HttpUtil;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 
 @Api("Img Recognise")
 @RestController
@@ -41,27 +33,20 @@ public class ImgController {
     public static String doPost(String url) {
         String apiKey = "6b067d014a88957";
         String api = "https://api.ocr.space/parse/image/";
-
         try{
-            CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-            HttpPost httpPost = new HttpPost(api);
-            //set header
-            httpPost.addHeader("apikey", apiKey);
-            //set body
-            Map<String, String> paramMap = new HashMap<String, String>();
-            paramMap.put("url", url);
-            httpPost.setEntity(new StringEntity(JSONObject.toJSONString(paramMap), ContentType.create("application/json", "utf-8")));
-            //make post
-            CloseableHttpResponse response = null;
-            response = httpClient.execute(httpPost);
-            HttpEntity responseEntity = (HttpEntity) response.getEntity();
-            String result = EntityUtils.toString((org.apache.http.HttpEntity) responseEntity);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.add("apikey", apiKey);
+
+            MultiValueMap<String , String> params = new LinkedMultiValueMap<String,String>();
+            params.add("url", url);
+
+            String result = HttpUtil.postRequestByUrlencoded(api, params, headers);
             return result;
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 
