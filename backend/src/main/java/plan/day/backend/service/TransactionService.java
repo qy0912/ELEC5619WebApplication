@@ -1,12 +1,15 @@
 package plan.day.backend.service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 import plan.day.backend.model.CustomUserDetails;
+import plan.day.backend.model.Income;
 import plan.day.backend.model.Transaction;
 import plan.day.backend.model.User;
 import plan.day.backend.payload.request.TransactionCreateRequest;
@@ -30,6 +33,11 @@ public class TransactionService {
     transaction.setUser(user);
     transaction.setCreateDate(Instant.now());
     return transactionRepository.save(transaction);
+  }
+
+  @ResponseBody
+  public List<Transaction> listTransaction(Long id) {
+    return transactionRepository.findAllByuser_id(id);
   }
 
 }
