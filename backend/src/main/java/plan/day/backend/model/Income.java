@@ -1,6 +1,7 @@
 package plan.day.backend.model;
 
 import java.time.Instant;
+import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
@@ -19,7 +20,7 @@ public class Income {
     private User user;
 
     @CreatedDate
-    private Instant createDate;
+    private Date createDate;
 
     @Size(max = 50)
     private String source;
