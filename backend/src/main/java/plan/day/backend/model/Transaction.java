@@ -1,6 +1,7 @@
 package plan.day.backend.model;
 
 import java.time.Instant;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class Transaction {
   private User user;
 
   @CreatedDate
-  private Instant createDate;
+  private Date createDate;
 
   @Size(max = 100)
   private String description;
