@@ -1,6 +1,7 @@
 package plan.day.backend.model;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ public class Category {
     private String description;
 
     @Size(max = 50)
+    @Column(unique=true)
     private String category_name;
 
 }

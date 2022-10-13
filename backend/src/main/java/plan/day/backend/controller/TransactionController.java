@@ -10,10 +10,14 @@ import plan.day.backend.annotation.CurrentUser;
 import plan.day.backend.model.CustomUserDetails;
 import plan.day.backend.model.Income;
 import plan.day.backend.model.Transaction;
+import plan.day.backend.payload.request.TimeFilterRequest;
 import plan.day.backend.payload.request.TransactionCreateRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.service.TransactionService;
+import plan.day.backend.util.IncomeUtil;
+import plan.day.backend.util.TransactionUtil;
 
+import java.text.ParseException;
 import java.util.List;
 
 @Api("Transaction CRUD")
@@ -45,4 +49,13 @@ public class TransactionController {
     return ResponseEntity.ok(transaction);
   }
 
+  @PostMapping("/tfilter")
+  public ResponseEntity<?> getIncomeWithDate(
+          @Valid @RequestBody TimeFilterRequest timefilterrequest,
+          @CurrentUser CustomUserDetails userDetails) throws ParseException {
+
+    List<Transaction> transaction = transactionService.listTransactionWithDate(timefilterrequest,userDetails);
+
+    return ResponseEntity.ok(new TransactionUtil().TransactionParser(transaction));
+  }
 }

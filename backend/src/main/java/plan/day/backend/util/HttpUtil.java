@@ -26,7 +26,19 @@ public class HttpUtil {
         }
         return null;
     }
-
+    public static String postRequestByUrlencoded(String url , MultiValueMap<String , String> params, HttpHeaders headers) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+        ResponseEntity<String> response = restTemplate.exchange(url , HttpMethod.POST , httpEntity , String.class);
+        if (response!=null && response.getStatusCode()==HttpStatus.OK){
+            String body = response.getBody();
+            if (body != null){
+                return body;
+            }
+            return  null;
+        }
+        return null;
+    }
 
     public static String getRequestByUrlencoded(String url , HashMap<String , Object> params){
         RestTemplate restTemplate = new RestTemplate();

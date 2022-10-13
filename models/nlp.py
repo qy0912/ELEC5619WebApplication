@@ -1,33 +1,17 @@
-
 import spacy
-import classy_classification
-
-# train data
-data = {
-    "help": ["What can you do",
-               "How to use you",
-               "Help"],
-    "upload": ["I have used 3 dolars for having breakfast",
-                "25$, fishing pod",
-                "four for train",] 
-}
-# load the modal
-nlp = spacy.load('en_core_web_md')
-nlp.add_pipe("text_categorizer", 
-    config={
-        "data": data,
-        "model": "spacy"
-    }
-)
-# predict
-def process(words):
-    result = nlp(words)._.cats
-    choose = "help"
-    for i in result.keys():
-        if result[i] > result[choose]:
-            choose = i
-    return choose
+nlp = spacy.load("model.pth")
+textcat = nlp.get_pipe('textcat')
 
 
-x = process("Can you help me?")
-print(x)
+
+
+
+
+
+def process(texts):
+    
+    docs = [nlp.tokenizer(text) for text in texts]
+    scores = textcat.predict(docs)
+    predicted_labels = scores.argmax(axis=1)
+    return [textcat.labels[label] for label in predicted_labels]
+

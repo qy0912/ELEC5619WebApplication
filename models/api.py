@@ -1,6 +1,6 @@
 import re
 from flask import *
-
+import nlp
 
 app = Flask(__name__)
 
@@ -9,13 +9,11 @@ app = Flask(__name__)
 def hello():
 
     if request.method == 'GET':
-        return {'response' :'Alive'}
+        return {'response' :nlp.process(['hello'])}
     elif request.method == 'POST':
-        
         words = request.form.get('words')
-        print(request.form)
         if words:
-            return {'response' : words + ' My response'}
+            return {'response' : nlp.process([words])}
         return "none"
 if __name__ == "__main__":
     app.run()
