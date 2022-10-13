@@ -38,8 +38,8 @@ public class TransactionService {
     BeanUtils.copyProperties(transactionCreateRequest, transaction);
     User user = userRepository.findById(userDetails.getId()).orElseThrow(() ->
         new UsernameNotFoundException("User not found!"));
-    String category_name = "Food";
-    String description = "Use in daily life, eat";
+    String category_name = transaction.getCategory_name();
+    String description = transaction.getDescription();
       List<Category> categoryList = categoryRepository.findByName(category_name);
       if(categoryList.size()!=0){
         Category category = categoryList.get(0);

@@ -30,6 +30,9 @@ public class Transaction {
   @JoinColumn(name="category_id", nullable = false)
   private Category category;
 
+  @Size(max = 100)
+  private String category_name;
+
   @CreatedDate
   private Date createDate;
 
