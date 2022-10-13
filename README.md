@@ -29,3 +29,8 @@ push test
 http://localhost:8080/swagger-ui/index.html
 
 Send request here
+
+
+## Run frontend
+- `yarn install`
+- `yarn start`
