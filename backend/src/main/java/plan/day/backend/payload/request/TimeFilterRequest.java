@@ -5,14 +5,15 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.Date;
 
 
 @Data
 public class TimeFilterRequest {
-    @NotBlank
-    public Instant start;
 
-    @NotBlank
-    public Instant finish;
+    public Date start;
+
+
+    public Date finish;
 
 }

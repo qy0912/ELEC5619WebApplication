@@ -1,4 +1,6 @@
 package plan.day.backend.controller;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,10 @@ import plan.day.backend.payload.request.AddIncomeRequest;
 import plan.day.backend.payload.request.TimeFilterRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.service.IncomeService;
+import plan.day.backend.util.IncomeUtil;
+
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,11 +43,11 @@ public class IncomeController {
     @PostMapping("/filter")
     public ResponseEntity<?> getIncomeWithDate(
             @Valid @RequestBody TimeFilterRequest timefilterrequest,
-            @CurrentUser CustomUserDetails userDetails) {
+            @CurrentUser CustomUserDetails userDetails) throws ParseException {
 
         List<Income> income = incomeService.listIncomeWithDate(timefilterrequest,userDetails);
 
-        return ResponseEntity.ok(income);
+        return ResponseEntity.ok(new IncomeUtil().IncomeParser(income));
     }
 
     @GetMapping("/")
@@ -50,7 +55,8 @@ public class IncomeController {
             @CurrentUser CustomUserDetails userDetails) {
 
         List<Income> income = incomeService.listIncome(userDetails.getId());
-        return ResponseEntity.ok(income);
+
+        return ResponseEntity.ok(new IncomeUtil().IncomeParser(income));
     }
 
 
