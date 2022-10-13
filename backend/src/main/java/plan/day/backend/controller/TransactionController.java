@@ -1,20 +1,17 @@
 package plan.day.backend.controller;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import plan.day.backend.annotation.CurrentUser;
 import plan.day.backend.model.CustomUserDetails;
-import plan.day.backend.model.Income;
 import plan.day.backend.model.Transaction;
 import plan.day.backend.payload.request.TimeFilterRequest;
 import plan.day.backend.payload.request.TransactionCreateRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.service.TransactionService;
-import plan.day.backend.util.IncomeUtil;
 import plan.day.backend.util.TransactionUtil;
 
 import java.text.ParseException;
