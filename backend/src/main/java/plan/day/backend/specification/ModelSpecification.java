@@ -8,30 +8,29 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-public class IncomeSpeccification implements Specification<Income> {
+public class ModelSpecification implements Specification<Object> {
     private SearchCriteria criteria;
 
-    public IncomeSpeccification(SearchCriteria c) {
+    public ModelSpecification(SearchCriteria c) {
         this.criteria=c;
     }
 
     @Override
-    public Predicate toPredicate(Root<Income> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-
+    public Predicate toPredicate(Root<Object> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         if (criteria.getOperation().equalsIgnoreCase(">")) {
-            return builder.greaterThanOrEqualTo(
+            return criteriaBuilder.greaterThanOrEqualTo(
                     root.<String> get(criteria.getKey()), criteria.getValue().toString());
         }
         else if (criteria.getOperation().equalsIgnoreCase("<")) {
-            return builder.lessThanOrEqualTo(
+            return criteriaBuilder.lessThanOrEqualTo(
                     root.<String> get(criteria.getKey()), criteria.getValue().toString());
         }
         else if (criteria.getOperation().equalsIgnoreCase(":")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
-                return builder.like(
+                return criteriaBuilder.like(
                         root.<String>get(criteria.getKey()), "%" + criteria.getValue() + "%");
             } else {
-                return builder.equal(root.get(criteria.getKey()), criteria.getValue());
+                return criteriaBuilder.equal(root.get(criteria.getKey()), criteria.getValue());
             }
         }
         return null;

@@ -2,7 +2,6 @@ package plan.day.backend.service;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,17 +14,11 @@ import plan.day.backend.payload.request.AddIncomeRequest;
 import plan.day.backend.payload.request.TimeFilterRequest;
 import plan.day.backend.repository.IncomeRepository;
 import plan.day.backend.repository.UserRepository;
-import plan.day.backend.specification.IncomeSpeccification;
-import plan.day.backend.specification.SearchCriteria;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class IncomeService {

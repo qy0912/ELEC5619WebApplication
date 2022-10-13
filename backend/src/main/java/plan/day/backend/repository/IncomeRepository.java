@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface IncomeRepository extends JpaRepository<Income, Long>, JpaSpecificationExecutor<Income> {
+public interface IncomeRepository extends JpaRepository<Income, Long>, JpaSpecificationExecutor <Income> {
     List<Income> findAllByuser_id(long id);
 
     @Query(value = "select * from income where user_id = ?1 and create_date between ?2 and ?3",nativeQuery = true)

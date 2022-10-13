@@ -17,6 +17,7 @@ public class TransactionUtil {
             jsonObject.put("description",transactions.get(i).getDescription());
             jsonObject.put("totalAmount",transactions.get(i).getTotalAmount());
             jsonObject.put("source",transactions.get(i).getSource());
+            jsonObject.put("category",transactions.get(i).getCategory().getCategory_name());
             res.add(jsonObject);
         }
         return res;
