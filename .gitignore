@@ -4,6 +4,7 @@ backend/target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+node_modules/
 ### STS ###
 .apt_generated
 .classpath
