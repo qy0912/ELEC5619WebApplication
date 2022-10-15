@@ -20,10 +20,6 @@ let data = [
   { user: "Dolars", msg: "hello", is_img: false },
   { user: "Me", msg: "hi", is_img: false },
   { user: "Dolars", msg: "hello", is_img: false },
-  { user: "Dolars", msg: "hello", is_img: false },
-  { user: "Dolars", msg: "hello", is_img: false },
-  { user: "Dolars", msg: "hello", is_img: false },
-  { user: "Dolars", msg: "hello", is_img: false },
 ];
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,25 +36,29 @@ const useStyles = makeStyles((theme) => ({
 
   msg_dolars: {
     marginTop: "2%",
-    paddingLeft: "0%",
-    paddingRight: "60%",
+    marginLeft: "1%",
+    marginRight: "60%",
   },
   msg_me: {
     marginTop: "2%",
-    paddingLeft: "60%",
-    paddingRight: "0%",
+    marginLeft: "60%",
+    marginRight: "20%",
   },
   msg_me_word: {
-    paddingLeft: "60%",
+    paddingLeft: "0%",
     paddingRight: "0%",
   },
   msg_dolars_word: {
-    paddingLeft: "60%",
+    paddingLeft: "0%",
     paddingRight: "0%",
   },
   msg_stack: {
     marginLeft: "5%",
     marginRight: "5%",
+  },
+  textbox: {
+    minWidth: 140,
+    maxWidth: 140,
   },
 }));
 const MsgCard = (input) => {
@@ -71,29 +71,19 @@ const MsgCard = (input) => {
             {input.msg.user[0]}
           </Avatar>
           <Stack>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={classes.msg_dolars}
-            >
+            <Typography variant="body2" color="text.secondary">
               {input.msg.user}
             </Typography>
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={classes.msg_dolars}
-            >
-              {input.msg.msg}
-            </Typography>
+            <Typography variant="body1">{input.msg.msg}</Typography>
           </Stack>
         </Stack>
       ) : (
         <Stack direction="row" spacing={3}>
-          <Stack className={classes.msg_me}>
+          <Stack className={classes.textbox}>
             <Typography variant="body2" color="text.secondary">
               {input.msg.user}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" gutterBottom>
               {input.msg.msg}
             </Typography>
           </Stack>
@@ -108,32 +98,41 @@ const MsgCard = (input) => {
 
 export default function ChatBox() {
   const classes = useStyles();
-  let msgs = data;
   const [file, setFile] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [text, setText] = useState(null);
-
+  const [msgs, setMsgs] = useState(data);
   const ImageInput = useRef(null);
+  const messagesEnd = useRef(null);
+  useEffect(() => {
+    if (messagesEnd && messagesEnd.current) {
+      messagesEnd.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [text]);
   const onFileChange = (event) => {
     setFile(event.target.files[0]);
     setImageUrl(URL.createObjectURL(event.target.files[0]));
     ImageInput.current.value = "";
   };
-  const handlePush = () => {
+  const handlePush = (event) => {
     if (text.length < 1) {
       return;
     }
     setText("");
     let body = {
-      user: "me",
-      text: text,
+      user: "Me",
+      msg: text,
       is_img: false,
     };
+    msgs.push(body);
+    setMsgs(msgs);
+    // messagesEnd.current.scrollIntoView({ behavior: "smooth" });
   };
+
   return (
     <Paper className={classes.root}>
       <Stack spacing={3} className={classes.msg_stack}>
-        <List sx={{ maxHeight: 300, overflow: "auto" }}>
+        <Box sx={{ minHeight: 300, maxHeight: 300, overflow: "auto" }}>
           {msgs.map((item, index) => {
             let x = item.user == "Dolars" ? classes.msg_dolars : classes.msg_me;
             return (
@@ -142,7 +141,8 @@ export default function ChatBox() {
               </Box>
             );
           })}
-        </List>
+          <div ref={messagesEnd}></div>
+        </Box>
         <Stack direction="row">
           <TextField
             id="standard-basic"
