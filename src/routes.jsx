@@ -24,6 +24,7 @@ import UserIssue from "./frontend/components/UserIssueView"
 import CreateAdmin from "./frontend/components/_dashboard/CreateAdmin"
 import AdminIssue from "./frontend/components/Issueview";
 import Transaction from "./frontend/components/_dashboard/Transaction";
+import Help from "./frontend/pages/Help";
 
 export default function Router(){
     return useRoutes([
@@ -42,12 +43,13 @@ export default function Router(){
                 { path: 'login', element: <Login /> },
                 { path: 'register', element: <Register /> },
                 { path: 'order', element: <Order /> },
+                { path: 'help', element: <Help />},
                 { path: 'report', element: <UserIssue/> },
-                {  path: 'addReport', element: <Report/> },
+                { path: 'addReport', element: <Report/> },
                 { path: '/:productname', element: <ProductDetail/> },
                 { path: 'dashboard', element: <DashboardLayout/>,
                     children: [
-                        {path: '/dashboard', element: <Summary />},
+                        { path: '/dashboard', element: <Summary />},
                         { path: '/dashboard/product', element: <Product /> },
                         { path: '/dashboard/addProduct', element: <AddProduct /> },
                         { path: '/dashboard/updateProduct', element: <UpdateProduct /> },

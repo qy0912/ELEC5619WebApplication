@@ -94,6 +94,7 @@ const Footer = () => {
                     <ListItem onClick={()=> navigate("/shopping")} >Start Chat</ListItem>
                     <ListItem onClick={()=> navigate("/setting")} >My Account</ListItem>
                     <ListItem onClick={()=> navigate("/")} >History</ListItem>
+                    <ListItem onClick={()=> navigate("/help")}>Help</ListItem>
                 </List>
             </Middle>
 
