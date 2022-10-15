@@ -1,4 +1,4 @@
-import {useRoutes} from 'react-router-dom';
+import { useRoutes } from "react-router-dom";
 import Login from "./frontend/pages/login";
 import Register from "./frontend/pages/Register";
 import MainLayOut from "./frontend/layout/MainLayOut";
@@ -18,15 +18,15 @@ import Summary from "./frontend/components/_dashboard/Summary";
 import React from "react";
 import ProductDetail from "./frontend/pages/ProductDetail";
 import FindPassword from "./frontend/pages/FindPassword";
-import Users from "./frontend/components/_dashboard/Users"
+import Users from "./frontend/components/_dashboard/Users";
 import Report from "./frontend/pages/Report";
-import UserIssue from "./frontend/components/UserIssueView"
-import CreateAdmin from "./frontend/components/_dashboard/CreateAdmin"
+import UserIssue from "./frontend/components/UserIssueView";
+import CreateAdmin from "./frontend/components/_dashboard/CreateAdmin";
 import AdminIssue from "./frontend/components/Issueview";
 import Transaction from "./frontend/components/_dashboard/Transaction";
 import Help from "./frontend/pages/Help";
 import UploadImg from "./frontend/pages/UploadImg";
-
+import ChatBox from "./frontend/pages/ChatBox";
 export default function Router(){
     return useRoutes([
         {
@@ -49,6 +49,7 @@ export default function Router(){
                 { path: 'report', element: <UserIssue/> },
                 { path: 'addReport', element: <Report/> },
                 { path: '/:productname', element: <ProductDetail/> },
+                { path: "chatbox", element: <ChatBox /> },
                 { path: 'dashboard', element: <DashboardLayout/>,
                     children: [
                         { path: '/dashboard', element: <Summary />},
@@ -61,6 +62,6 @@ export default function Router(){
                         { path: '/dashboard/transaction', element: <Transaction />}
                     ]}
             ]
-        },
-    ]);
+    },
+  ]);
 }
