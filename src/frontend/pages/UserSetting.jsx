@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme)=> ({
 
 function UserSetting() {
     const [newUserName, setNewUserName] = useState(cookieMan.loginUser())
-    const [newEmail, setNewEmail] = useState(cookieMan.getEmail())
-    const [newAddress, setNewAddress] = useState(cookieMan.getAddress())
+   // const [newEmail, setNewEmail] = useState(cookieMan.getEmail())
+ //   const [newAddress, setNewAddress] = useState(cookieMan.getAddress())
     const [oldUserName, setOldUserName] = useState(cookieMan.loginUser())
-    const [oldEmail, setOldEmail] = useState(cookieMan.getEmail())
-    const [oldAddress, setOldAddress] = useState(cookieMan.getAddress())
+   // const [oldEmail, setOldEmail] = useState(cookieMan.getEmail())
+   // const [oldAddress, setOldAddress] = useState(cookieMan.getAddress())
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState('')
     const [severity, setSeverity] = useState('success')
@@ -48,7 +48,7 @@ function UserSetting() {
 
     const backToLogin = (e) => {
         e.preventDefault()
-        navigate("/shopping?category=5&order=1");
+        navigate("/dashboard");
     }
 
     const validateAll = () => {
@@ -78,7 +78,7 @@ function UserSetting() {
     const handleUpdate = (e) => {
         e.preventDefault()
         
-        if(newUserName === oldUserName && newAddress === oldAddress && newEmail === oldEmail){
+        if(newUserName === oldUserName ){
             if(newUserName === '' || newUserName === undefined){
                 setMsg("You need to change at least one field!");
                 setSeverity('error');
@@ -92,8 +92,8 @@ function UserSetting() {
                 if (newUserName !== 'undefined' && newUserName !== ''){
                     const newInfo = {
                         newUserName: newUserName,
-                        newEmail: newEmail,
-                        newAddress: newAddress,
+                        // newEmail: newEmail,
+                        // newAddress: newAddress,
                         currentUserName: oldUserName
                     }
                     axios.post('/api/user/setting', newInfo)
@@ -105,11 +105,11 @@ function UserSetting() {
                             setSeverity('success');
                             setOpen(true);
                             const Type = cookieMan.getType()
-                            setOldUserName(newUserName);
-                            setOldEmail(newEmail);
-                            setOldAddress(newAddress);
+                          //  setOldUserName(newUserName);
+                           // setOldEmail(newEmail);
+                           // setOldAddress(newAddress);
                             cookieMan.logout();
-                            cookieMan.onLogin(newUserName,Type,newEmail,newAddress);
+                            cookieMan.onLogin(newUserName);
 
                         }else if(res.data.status === "Invalid"){
                             setMsg("Username already exist!");
@@ -171,26 +171,7 @@ function UserSetting() {
                         helperText={nameErrorDes}
                         margin={"normal"}
                     />
-                    <TextField
-                        onChange={(e) => setNewEmail(e.target.value)}
-                        defaultValue={newEmail}
-                        label={"New Email"}
-                        variant={"outlined"}
-                        multiline
-                        fullWidth
-                        row={4}
-                        required
-                        margin={"normal"}
-                    />
-                    <TextField
-                        onChange={(e) => setNewAddress(e.target.value)}
-                        defaultValue={newAddress}
-                        label={"New Address"}
-                        variant={"outlined"}
-                        required
-                        fullWidth
-                        margin={"normal"}
-                    />
+                   
 
                     <Stack
                         direction={"row"}
