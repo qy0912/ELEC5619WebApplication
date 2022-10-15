@@ -3,6 +3,7 @@ package plan.day.backend.controller;
 import io.swagger.annotations.Api;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import plan.day.backend.annotation.CurrentUser;
@@ -42,17 +43,27 @@ public class TransactionController {
           @CurrentUser CustomUserDetails userDetails) {
 
     List<Transaction> transaction  = transactionService.listTransaction(userDetails.getId());
-
     return ResponseEntity.ok(transaction);
   }
 
   @PostMapping("/tfilter")
-  public ResponseEntity<?> getIncomeWithDate(
+  public ResponseEntity<?> getTransactionWithDate(
           @Valid @RequestBody TimeFilterRequest timefilterrequest,
           @CurrentUser CustomUserDetails userDetails) throws ParseException {
 
     List<Transaction> transaction = transactionService.listTransactionWithDate(timefilterrequest,userDetails);
-
+    if(timefilterrequest.start==null || timefilterrequest.finish==null ){
+      return ResponseEntity.ok(new GeneralApiResponse(false, "please define start and finish date"));
+    }
     return ResponseEntity.ok(new TransactionUtil().TransactionParser(transaction));
+  }
+
+  @PostMapping("/summary")
+  public ResponseEntity<?> getTransactionSummary(
+          @Valid @RequestBody TimeFilterRequest timefilterrequest,
+          @CurrentUser CustomUserDetails userDetails) throws ParseException  {
+
+    List<Transaction> transaction  = transactionService.listTransactionWithDate(timefilterrequest,userDetails);
+    return ResponseEntity.ok(new TransactionUtil().TransactionSummaryParser(transaction));
   }
 }
