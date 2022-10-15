@@ -42,8 +42,13 @@ const Login = () => {
             console.log(res)
             if(res.status === 200){
                 cookieMan.onLogin(username);
-                navigate("/dashboard");
-                window.location.reload();
+                localStorage.setItem("token", res.data.tokenType + " " + res.data.accessToken)
+                localStorage.setItem("username", res.data.username)
+                localStorage.setItem("gender", res.data.gender)
+                localStorage.setItem("avatar", res.data.avatar)
+                localStorage.setItem("theme", res.data.theme)
+                // navigate("/dashboard");
+                // window.location.reload();
             }
         })
         .catch(err =>{
