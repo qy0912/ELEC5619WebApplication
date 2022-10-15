@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {
-    Button,
-    Container, Link, Stack,
-    TextField,
-    Paper
+  Button,
+  Container, Link, Stack,
+  TextField,
+  Paper, FormControl, InputLabel, MenuItem, Avatar
 } from "@mui/material";
 import PublishIcon from "@mui/icons-material//Publish";
-import cookieMan from '../cookieManager';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import Collapse from '@mui/material/Collapse';
@@ -15,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import {Alert} from '@mui/material'
 import {makeStyles} from "@mui/styles";
 import Typography from "@mui/material/Typography";
+import Select from '@mui/material/Select';
  
 const useStyles = makeStyles((theme)=> ({
     root: {
@@ -25,24 +25,23 @@ const useStyles = makeStyles((theme)=> ({
     }
 }))
 
-
 function UserSetting() {
-    const [newUserName, setNewUserName] = useState(cookieMan.loginUser())
-   // const [newEmail, setNewEmail] = useState(cookieMan.getEmail())
- //   const [newAddress, setNewAddress] = useState(cookieMan.getAddress())
-    const [oldUserName, setOldUserName] = useState(cookieMan.loginUser())
-   // const [oldEmail, setOldEmail] = useState(cookieMan.getEmail())
-   // const [oldAddress, setOldAddress] = useState(cookieMan.getAddress())
+    const oldUserName = localStorage.getItem("username")
+    const [newUserName, setNewUserName] = useState(localStorage.getItem("username"))
     const [open, setOpen] = useState(false)
     const [msg, setMsg] = useState('')
     const [severity, setSeverity] = useState('success')
     const [nameError, setNameError] = useState(false)
-    const [nameErrorDes, setNameErrorDes] = useState('')
+    const [nameErrorDes, setNameErrorDes] = useState('Change user name will be required to re-login')
+    const [gender, setGender] = useState(localStorage.getItem("gender"))
+    const [theme, setTheme] = useState(localStorage.getItem("theme"))
+    const [avatar, setAvatar] = useState(localStorage.getItem("avatar"))
+
     const navigate = useNavigate();
     const classes = useStyles();
     
     useEffect( () => {
-        if (oldUserName === undefined) {
+        if (oldUserName === null) {
             navigate("/login")
         }}, []);
 
@@ -51,18 +50,27 @@ function UserSetting() {
         navigate("/dashboard");
     }
 
+    const handleGenderChange = (event) => {
+      setGender(event.target.value);
+    }
+
+    const handleThemeChange = (event) => {
+      setTheme(event.target.value);
+    }
+
+    const handleUserNameChange = (event) => {
+      setNewUserName(event.target.value);
+      if(event.target.value === null || event.target.value=== '') {
+        ReportNameError(true)
+      } else {
+        ReportNameError(false)
+      }
+    }
+
     const validateAll = () => {
         if(newUserName === '' || newUserName === undefined) {
             setNameError(true)
             setNameErrorDes('User name cannot be empty')
-        }
-    }
-    const checkSetUserName = (e) => {
-        setNewUserName(e.target.value)
-        if(e.target.value === null || e.target.value=== '') {
-            ReportNameError(true)
-        } else {
-            ReportNameError(false)
         }
     }
 
@@ -75,41 +83,54 @@ function UserSetting() {
         }
     }
 
+    const handleAvatarChange = (event) => {
+      let formData = new FormData();
+      formData.append("avatar", event.target.files[0])
+      axios.post("/api/user/avatar", formData,
+          {headers: {'Authorization': localStorage.getItem("token"), "Content-Type": "multipart/form-data"}})
+      .then(res => {
+        if (res.data.success === true) {
+          let new_avatar = res.data.result
+          localStorage.setItem("avatar", new_avatar)
+          setAvatar(new_avatar)
+        }
+      })
+    }
+
     const handleUpdate = (e) => {
         e.preventDefault()
-
-        if (oldUserName !== undefined ) {
-            if (newUserName !== 'undefined' && newUserName !== ''){
-                const newInfo = {
-                    newUserName: newUserName,
-                    currentUserName: oldUserName
-                }
-                axios.put('/api/user/modify', newInfo,
-                    {headers: {'Authorization': localStorage.getItem("token")}})
-                .then(res => {
-                    if(res.data.status === "UserUpdated"){
-                        setMsg("Modify Successfully! ");
-                        setSeverity('success');
-                        setOpen(true);
-                        const Type = cookieMan.getType()
-                        cookieMan.logout();
-                        cookieMan.onLogin(newUserName);
-
-                    }else if(res.data.status === "Invalid"){
-                        setMsg("Username already exist!");
-                        setSeverity('error');
-                        setOpen(true);
+        if (newUserName !== 'undefined' && newUserName !== ''){
+            const newInfo = {
+                username: newUserName,
+                gender: gender,
+                theme: theme
+            }
+            axios.put('/api/user/modify', newInfo,
+                {headers: {'Authorization': localStorage.getItem("token")}})
+            .then(res => {
+                if(res.data.success === true){
+                    setMsg("Modify Successfully! ");
+                    setSeverity('success');
+                    setOpen(true);
+                    if (newUserName !== oldUserName) {
+                      localStorage.clear();
+                      navigate("/login");
                     }
-                })
-            }
-            else{
-                validateAll()
-                setMsg("Username cannot be empty!");
-                setSeverity('error');
-                setOpen(true);
-            }
+                    localStorage.setItem("gender", gender)
+                    localStorage.setItem("theme", theme)
+                }else {
+                    setMsg(res.data.message);
+                    setSeverity('error');
+                    setOpen(true);
+                }
+            })
         }
-
+        else{
+            validateAll()
+            setMsg("Username cannot be empty!");
+            setSeverity('error');
+            setOpen(true);
+        }
     }
 
     return (
@@ -138,28 +159,33 @@ function UserSetting() {
             <Container
                 maxWidth={"xs"}
             >
+              <br/>
                 <Stack justifyContent={"center"} direction={"row"}>
                     <Typography variant={"h5"} component={"header"}>
-                        Upload Avatar
+                      Modify Personal Information
                     </Typography>
                 </Stack>
 
-                <form noValidate autoComplete="off">
-                    <TextField
-                        disabled = {true}
-                        defaultValue={newUserName}
-                        label={"Username"}
-                        variant={"outlined"}
-                        fullWidth
-                        required
-                        helperText={nameErrorDes}
-                        margin={"normal"}
-                    />
+              <br/>
+
+              <form noValidate autoComplete="off">
+                  <Stack justifyContent={"center"} direction={"row"}>
+                    <Avatar src={avatar} sx={{ width: 100, height: 100 }}/>
+                  </Stack>
+
+                  <br/>
 
                   <Stack justifyContent={"center"} direction={"row"}>
-                    <Button variant="contained" component="label">
+                    <Button variant="contained" component="label" >
                       Upload
-                      <input hidden accept="image/*" multiple type="file" />
+                      <input hidden multiple type="file" accept="image/*"
+                             onChange={(event)=> {
+                               handleAvatarChange(event)
+                             }}
+                             onClick={(event)=> {
+                               event.target.value = null
+                             }}
+                      />
                     </Button>
                   </Stack>
 
@@ -167,15 +193,9 @@ function UserSetting() {
 
             </Container>
             <br/>
-            <br/>
             <Container
                 maxWidth={"xs"}
             >
-              <Stack justifyContent={"center"} direction={"row"}>
-                <Typography variant={"h5"} component={"header"}>
-                  Modify Personal Information
-                </Typography>
-              </Stack>
 
               <form noValidate autoComplete="off">
                 <TextField
@@ -186,7 +206,49 @@ function UserSetting() {
                     required
                     helperText={nameErrorDes}
                     margin={"normal"}
+                    onChange={handleUserNameChange}
                 />
+                <br/>
+                <br/>
+
+                <FormControl fullWidth>
+                  <InputLabel>Gender</InputLabel>
+                  <Select
+                      labelId="demo-simple-select-label"
+                      variant={"outlined"}
+                      margin={"normal"}
+                      value={gender}
+
+                      required
+                      label="Gender"
+                      onChange={handleGenderChange}
+                  >
+                    <MenuItem value={0}>Male</MenuItem>
+                    <MenuItem value={1}>Female</MenuItem>
+                    <MenuItem value={2}>Not to say</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <br/>
+                <br/>
+
+                <FormControl fullWidth>
+                  <InputLabel>Theme</InputLabel>
+                  <Select
+                      labelId="demo-simple-select-label"
+                      variant={"outlined"}
+                      margin={"normal"}
+                      value={theme}
+                      required
+                      label="Theme"
+                      onChange={handleThemeChange}
+                  >
+                    <MenuItem value={"LIGHT"}>Light</MenuItem>
+                    <MenuItem value={"DARK"}>Dark</MenuItem>
+                    <MenuItem value={"YELLOW"}>Yellow</MenuItem>
+                    <MenuItem value={"BLUE"}>Blue</MenuItem>
+                  </Select>
+                </FormControl>
 
                 <Stack
                     justifyContent={"space-between"}
