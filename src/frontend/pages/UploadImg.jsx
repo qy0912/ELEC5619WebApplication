@@ -80,7 +80,7 @@ const UploadImg = () => {
             console.log("image base64 is: ")
         	console.log(response.data);
 
-        	let data = {"url": 'image/png;base64,'+response.data};
+        	let data = {"url": 'data:image/png;base64,'+response.data};
             
             axios.post('/api/img/recImg', data)
                 .then(res => {
