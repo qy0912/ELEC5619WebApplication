@@ -156,7 +156,7 @@ export default function ChatBox() {
         console.log(res);
       });
 
-    text = "";
+    setText("");
     setMsgs(msgs);
     // messagesEnd.current.scrollIntoView({ behavior: "smooth" });
   };
