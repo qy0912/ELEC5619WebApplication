@@ -68,7 +68,7 @@ public class UserController {
   public ResponseEntity<?> modify(@Valid @RequestBody UserModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
     if (!Objects.equals(userService.getUser(userDetails.getId()).getUsername(), userModifyRequest.getUsername())){
       if (userService.checkUserNameAvailable(userModifyRequest.getUsername())) {
-        return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok(new GeneralApiResponse(false, "Username already registered!"));
       }
     }
 
