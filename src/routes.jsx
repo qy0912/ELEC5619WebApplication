@@ -25,6 +25,7 @@ import CreateAdmin from "./frontend/components/_dashboard/CreateAdmin"
 import AdminIssue from "./frontend/components/Issueview";
 import Transaction from "./frontend/components/_dashboard/Transaction";
 import Help from "./frontend/pages/Help";
+import UploadImg from "./frontend/pages/UploadImg";
 
 export default function Router(){
     return useRoutes([
@@ -44,6 +45,7 @@ export default function Router(){
                 { path: 'register', element: <Register /> },
                 { path: 'order', element: <Order /> },
                 { path: 'help', element: <Help />},
+                { path: 'uploadimg', element: <UploadImg />},
                 { path: 'report', element: <UserIssue/> },
                 { path: 'addReport', element: <Report/> },
                 { path: '/:productname', element: <ProductDetail/> },

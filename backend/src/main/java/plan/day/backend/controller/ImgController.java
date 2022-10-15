@@ -42,6 +42,7 @@ public class ImgController {
             params.add("url", url);
 
             String result = HttpUtil.postRequestByUrlencoded(api, params, headers);
+            System.out.print(result);
             return result;
 
         } catch (Exception e) {
