@@ -17,4 +17,6 @@ public class TransactionCreateRequest {
 
   private Double totalAmount;
 
+  private String category_name;
+
 }

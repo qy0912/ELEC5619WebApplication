@@ -26,6 +26,13 @@ public class Transaction {
   @JoinColumn(name="user_id", nullable = false)
   private User user;
 
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name="category_id", nullable = false)
+  private Category category;
+
+  @Size(max = 100)
+  private String category_name;
+
   @CreatedDate
   private Date createDate;
 

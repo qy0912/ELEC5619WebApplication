@@ -1,0 +1,47 @@
+.background_img {
+    background-size: cover;
+    /*background-position: center center;*/
+    background-repeat: no-repeat;
+    position: relative;
+    background-attachment: fixed;
+
+    width:100%;
+    left: 0px;
+    top: 0px;
+}
+
+.central_heading1 {
+    position: absolute;
+    top: 35%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+
+    display:flex;
+    flex-direction: row;
+    font-size: 7vw;
+    font-weight: bold;
+    margin: 0px, 0px;
+    white-space: nowrap;
+}
+
+.text{
+    display:flex;
+    flex-direction: row;
+    font-size: 2vw;
+    font-weight: bold;
+    margin: 0px, 0px;
+    color: white;
+    white-space: nowrap;
+}
+
+.central_heading2 {
+    top: 65%;
+    left: 65%;
+}
+
+.logo_icon {
+    height: auto; 
+    width: auto; 
+    max-width: 140px; 
+    max-height: 140px;
+}
