@@ -6,6 +6,7 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography'
+import cookie from 'react-cookies'
 
 const Container = styled.div`
   width: 100%;
@@ -82,6 +83,8 @@ const Desc = styled.p`
   letter-spacing: 3px;
 `;
 
+
+
 const Slider = () => {
     const [slideIndex, setSlideIndex] = useState(0);
     const navigate = useNavigate();
@@ -92,6 +95,16 @@ const Slider = () => {
             setSlideIndex(slideIndex < 2 ? slideIndex + 1 : 0);
         }
     };
+
+    const handleClickButton = () => {
+      if (cookie.load('userInfo')===undefined ||cookie.load('userInfo')===null ){
+        navigate("/login")
+      }
+      else{
+        navigate("/")
+      }
+  };
+
 
     return (
         <Container>
@@ -115,7 +128,7 @@ const Slider = () => {
                               fontWeight: '400',
                               letterSpacing: '1.5px'
                             }}>{item.desc}</Typography>
-                            <Button variant='outlined' onClick={() => navigate("/shopping?category=5&order=1")}
+                            <Button variant='outlined' onClick={() => handleClickButton()}
                               sx={{
                                 borderColor: '#' + item.titleColor,
                                 color: '#' + item.titleColor
