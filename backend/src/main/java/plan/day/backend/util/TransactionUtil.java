@@ -75,4 +75,36 @@ public class TransactionUtil {
 
         return res;
     }
+
+    public JSONObject BudgePlanningParser(List<Transaction> transactions,List<Income> incomes){
+        double incomesum = 0;
+        for(int i = 0 ; i < incomes.size(); i++){
+            incomesum+=incomes.get(i).getTotalAmount();
+        }
+
+
+        double transactionsum = 0;
+        Map<String, Double> dictionary = new HashMap<String, Double>();
+        for(int i = 0; i<transactions.size(); i++){
+            String cat_name = transactions.get(i).getCategory_name();
+            transactionsum += transactions.get(i).getTotalAmount();
+            if(dictionary.get(cat_name)==null){
+                dictionary.put(cat_name,transactions.get(i).getTotalAmount());
+            }else{
+                dictionary.put(cat_name,dictionary.get(cat_name)+transactions.get(i).getTotalAmount());
+            }
+        }
+
+        JSONObject res = new JSONObject();
+        JSONArray cat_amount = new JSONArray();
+        for(String key: dictionary.keySet()){
+            JSONObject catObject = new JSONObject();
+            catObject.put("catergory_name",key);
+            catObject.put("planed_spend",dictionary.get(key)/transactionsum*incomesum);
+            cat_amount.add(catObject);
+        }
+        res.put("total_income",incomesum);
+        res.put("catergory_plan",cat_amount);
+        return res;
+    }
 }

@@ -1,5 +1,6 @@
 package plan.day.backend.service;
 import java.text.ParseException;
+import java.time.Duration;
 import java.util.Date;
 import java.util.List;
 
@@ -11,11 +12,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
-import plan.day.backend.model.CustomUserDetails;
-import plan.day.backend.model.Transaction;
-import plan.day.backend.model.User;
+import plan.day.backend.model.*;
+import plan.day.backend.payload.request.BudgetPlanningRequest;
 import plan.day.backend.payload.request.TimeFilterRequest;
-import plan.day.backend.model.Category;
 import plan.day.backend.payload.request.TransactionCreateRequest;
 import plan.day.backend.repository.CategoryRepository;
 import plan.day.backend.repository.TransactionRepository;
@@ -81,5 +80,22 @@ public class TransactionService {
       totalAmount += results.get(i).getTotalAmount();
     }
     return totalAmount;
+  }
+
+  @ResponseBody
+  public List<Transaction> listTransactionWithRange(BudgetPlanningRequest request, CustomUserDetails userDetails) throws ParseException {
+    Date start;
+    Date finish = new Date();
+    if(request.range.toString() == "WEEKLY"){
+      start = new Date(finish.getTime() - Duration.ofDays(7).toMillis());
+    }else if(request.range.toString() == "MONTHLY"){
+      start = new Date(finish.getTime() - Duration.ofDays(31).toMillis());
+    }else{
+      start = new Date(finish.getTime() - Duration.ofDays(365).toMillis());
+    }
+
+    List<Transaction> results = transactionRepository.findByTime(userDetails.getId(),start,finish);
+
+    return results;
   }
 }
