@@ -72,6 +72,7 @@ public class TransactionService {
     return results;
   }
 
+
   @ResponseBody
   public double getTotalTransactionWithCategory(String category_name, CustomUserDetails userDetails) throws ParseException {
     double totalAmount = 0;
