@@ -66,14 +66,20 @@ public class TransactionService {
 
   @ResponseBody
   public List<Transaction> listTransactionWithDate(TimeFilterRequest timefilterrequest, CustomUserDetails userDetails) throws ParseException {
-
     Date start = timefilterrequest.start;
     Date finish = timefilterrequest.finish;
-
     List<Transaction> results = transactionRepository.findByTime(userDetails.getId(),start,finish);
-
     return results;
   }
 
 
+  @ResponseBody
+  public double getTotalTransactionWithCategory(String category_name, CustomUserDetails userDetails) throws ParseException {
+    double totalAmount = 0;
+    List<Transaction> results = transactionRepository.findByCategory(category_name, userDetails.getId());
+    for(int i = 0; i< results.size();i++){
+      totalAmount += results.get(i).getTotalAmount();
+    }
+    return totalAmount;
+  }
 }

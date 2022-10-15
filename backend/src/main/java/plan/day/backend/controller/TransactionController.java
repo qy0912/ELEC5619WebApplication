@@ -1,5 +1,6 @@
 package plan.day.backend.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,6 @@ import plan.day.backend.payload.request.TransactionCreateRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
 import plan.day.backend.service.TransactionService;
 import plan.day.backend.util.TransactionUtil;
-
 import java.text.ParseException;
 import java.util.List;
 
@@ -46,11 +46,21 @@ public class TransactionController {
     return ResponseEntity.ok(transaction);
   }
 
+  @GetMapping(value = "/{category_name}")
+  public ResponseEntity<?> getTotalTransactionWithCategory(
+          @PathVariable String category_name,
+          @CurrentUser CustomUserDetails userDetails) throws ParseException {
+    double totalAmount = transactionService.getTotalTransactionWithCategory(category_name, userDetails);
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("category_name", category_name);
+    jsonObject.put("total_amount", totalAmount);
+    return ResponseEntity.ok(jsonObject);
+  }
+
   @PostMapping("/tfilter")
   public ResponseEntity<?> getTransactionWithDate(
           @Valid @RequestBody TimeFilterRequest timefilterrequest,
           @CurrentUser CustomUserDetails userDetails) throws ParseException {
-
     List<Transaction> transaction = transactionService.listTransactionWithDate(timefilterrequest,userDetails);
     if(timefilterrequest.start==null || timefilterrequest.finish==null ){
       return ResponseEntity.ok(new GeneralApiResponse(false, "please define start and finish date"));
