@@ -98,7 +98,7 @@ export default function MainLayOut() {
                         >
                             <img
                                 className={classes.logo}
-                                src="/assets/logoSmall.png"
+                                src="/assets/icon.png"
                                 alt="logo Image"
                                 sx={{
                                     cursor:'pointer'
