@@ -26,6 +26,7 @@ import AdminIssue from "./frontend/components/Issueview";
 import Transaction from "./frontend/components/_dashboard/Transaction";
 import Help from "./frontend/pages/Help";
 import ChatBox from "./frontend/pages/ChatBox";
+import UploadImg from "./frontend/pages/UploadImg";
 export default function Router() {
   return useRoutes([
     {
@@ -47,6 +48,7 @@ export default function Router() {
         { path: "help", element: <Help /> },
         { path: "report", element: <UserIssue /> },
         { path: "addReport", element: <Report /> },
+        { path: "uploadimg", element: <UploadImg /> },
         {
           path: "dashboard",
           element: <DashboardLayout />,
