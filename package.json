@@ -4,7 +4,7 @@
   "private": true,
   "start": "node index.js",
   "server": "nodemon index.js --ignore client",
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",

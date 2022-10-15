@@ -3,7 +3,7 @@ import cookie from 'react-cookies'
 var CryptoJS = require("crypto-js");
 
 
-const onLogin = (user, account_type,email, address) => {
+const onLogin = (user) => {
     var d = new Date();
     var t = d.getTime();
     // Encrypt
@@ -12,9 +12,7 @@ const onLogin = (user, account_type,email, address) => {
     // Decrypt
     cookie.save('login_time', t+"", {path: '/'})
     cookie.save('userInfo', ciphertext, { path: '/' })
-    cookie.save('account_type', account_type, { path: '/' })
-    cookie.save('email',email, { path: '/' })
-    cookie.save('address', address, { path: '/' })
+     
 
 }
 const getType = ()=>{
@@ -29,18 +27,12 @@ const loginUser = () => {
     var decryptedData = bytes.toString(CryptoJS.enc.Utf8);
     return decryptedData
 }
-const getEmail = () => {
-    return cookie.load('email')
-}
-const getAddress = () => {
-    return cookie.load('address')
-}
+ 
  
 const logout = () => {
     cookie.remove('userInfo')
-    cookie.remove('account_type')
-    cookie.remove('address')
-    cookie.remove('email')
+    
+    
     // window.location.Reload()
 }
 
@@ -51,8 +43,7 @@ let cookieMan = {
     loginUser: loginUser,
     logout:logout,
     getType:getType,
-    getEmail:getEmail,
-    getAddress:getAddress
+ 
 }
 
 export default cookieMan;

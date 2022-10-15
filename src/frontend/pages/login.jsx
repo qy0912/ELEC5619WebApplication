@@ -36,26 +36,22 @@ const Login = () => {
 
     const login = (username,password) => {
         let data = {"username":username,"password":password};
+        console.log(111)
         axios.post('/api/user/login', data)
         .then(res => {
-            
-            if(res.data.status === "Success"){
-                cookieMan.onLogin(username,res.data.account_type,res.data.email,res.data.address);
-                componentDidMount();
+            console.log(res)
+            if(res.status === 200){
+                cookieMan.onLogin(username);
+                navigate("/dashboard");
                 window.location.reload();
-            }else if(res.data.status === "Banned") {
-                setOpenAlert(true)
-                setMessage("Your account has been suspended, please contact the admin for more information.")
-            }
-            else if(res.data.status === "Fail"){
-                setOpenAlert(true)
-                setMessage("Username and Password does not match !")
-            }else if(res.data.status === "Invalid"){
-                setOpenAlert(true)
-                setMessage("Username does not exist!")
             }
         })
-        .catch(err => console.log(err.data));
+        .catch(err =>{
+            setOpenAlert(true)
+            setMessage("Username and Password does not match !")
+            console.log(err.data)
+        }
+        );
     }
 
     const handleClose = (event, reason) => {
@@ -63,16 +59,6 @@ const Login = () => {
             return;
         }
         setOpenAlert(false);
-    }
-
-    const componentDidMount = () => {
-        if(cookieMan.loginUser() !== undefined){
-            if(cookieMan.getType() === "provider"){
-                navigate("/dashboard");
-            }else{
-                navigate("/shopping?category=5&order=1");
-            }
-        }
     }
 
     return(

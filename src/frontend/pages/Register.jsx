@@ -30,73 +30,49 @@ const useStyles = makeStyles((theme) => ({
 const Register = () => {
     const navigate = useNavigate();
     const classes = useStyles();
-    const [userType, setUserType] = useState("customer");
+    
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
-    const [email, setEmail] = useState('');
+    
     const [nameError, setNameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [confirmError, setConfirmError] = useState(false);
-    const [emailError, setEmailError] = useState(false);
+   // const [emailError, setEmailError] = useState(false);
     const [nameDesc, setNameDesc] = useState('');
-    const [emailDesc, setEmailDesc] = useState('');
+     
     const [passwordDesc, setPasswordDesc] = useState('');
     const [confirmDesc, setConfirmDesc] = useState('');
     const [openAlert, setOpenAlert] = useState(false);
     const [message, setMessage] = useState('');
     const [color, setColor] = useState('success');
-    const [code, setCode] = useState('');
-    const [enterCode, setEnterCode] = useState('');
-    const [codeActive, setCodeActive] = useState(false);
-    const [enterCodeError, setEnterCodeError] = useState(false);
-    const [enterCodeDesc, setEnterCodeDesc] = useState('');
+    // const [code, setCode] = useState('');
+    // const [enterCode, setEnterCode] = useState('');
+    // const [codeActive, setCodeActive] = useState(false);
+    // const [enterCodeError, setEnterCodeError] = useState(false);
+    // const [enterCodeDesc, setEnterCodeDesc] = useState('');
 
-    const signup = (username, password, confirm) => {
+    const signup = (username, password) => {
         if (validateAll() === true){
-            let data = {"username": username, "password": password, "email": email, "account_type": userType};
-            axios.post('/api/user/add', data)
+            let data = {"username": username, "password": password};
+            axios.post('/api/user/signup', data)
                 .then(res => {
-                    
-                    if (res.data === "User added!") {
+                    if (res.data.message === "User registered!") {
+                        
                         setOpenAlert(true);
                         setMessage("Successfully Sign up Welcome!");
                         navigate("/login");
-                    } else {
-                        setOpenAlert(true);
+                    } 
+                })
+                .catch(err => {
+                    setOpenAlert(true);
                         setMessage("Username already exist, try another one!");
                         setColor('error');
-                    }
-                })
-                .catch(err => console.log(err.data));
-        } else {
-        }
+                        console.log(err.data)
+                });
+        } 
     }
 
-    const sendEmail = () => {
-        let newCode = ''
-
-        if (emailError) {
-            return;
-        }
-        //send email
-        for (let i = 0; i < 6; i++) {
-            newCode += parseInt(Math.random()*10);
-        }
-        let data = {"code": newCode, "email": email};
-
-       
-        axios.post('/api/email/sendEmail', data)
-            .then(res => {
-                console.log("finish sending");
-            })
-            .catch(err => console.log(err.data));
-        setCodeActive(true);
-        setCode(newCode);
-        setOpenAlert(true);
-        setMessage("verify email has been sent");
-        return;
-    }
 
     const handleClose = (event, reason) => {
         if (reason === "clickaway"){
@@ -114,11 +90,7 @@ const Register = () => {
             pass = false;
         }
 
-        if (email === '') {
-            setEmailError(true);
-            setEmailDesc('Email address cannot be empty');
-            pass = false;
-        }
+         
 
         if (password === '') {
             setPasswordError(true)
@@ -126,11 +98,6 @@ const Register = () => {
             pass = false;
         }
 
-        if (confirm === '') {
-            setConfirmError(true);
-            setConfirmDesc('Confirm password cannot be empty');
-            pass = false;
-        }
 
         if (password !== confirm) {
             setConfirmError(true);
@@ -138,34 +105,12 @@ const Register = () => {
             pass = false;
         }
 
-        if (enterCode === '') {
-            setEnterCodeError(true);
-            setEnterCodeDesc('Enter code cannot be empty')
-            pass = false;
-        } else {
-            if (enterCode !== code) {
-                setEnterCodeError(true);
-                setEnterCodeDesc('Enter code is the not same as Email')
-                pass = false;
-            }
-        }
+         
         return pass;
     }
 
-    const handleEnterCode = (event) => {
-        if (event.target.value !== ''){
-            setEnterCode(event.target.value);
-            setEnterCodeError(false);
-            setEnterCodeDesc('');
-        } else {
-            setEnterCodeError(true);
-            setEnterCodeDesc('Enter Code cannot be empty')
-        }
-    }
-
-    const handleType = (event) => {
-        setUserType(event.target.value)
-    }
+    
+ 
 
     const handleChangeName = (event) => {
         if (event.target.value !== ''){
@@ -178,22 +123,7 @@ const Register = () => {
         }
     }
 
-    const handleChangeEmail = (event) => {
-        if (event.target.value !== ''){
-            let Regex = /^(?:\w+\.?)*\w+@(?:\w+\.)*\w+$/;
-            if (!Regex.test(event.target.value)){
-                setEmailError(true);
-                setEmailDesc("Wrong Email Format");
-            } else {
-                setEmail(event.target.value);
-                setEmailError(false);
-                setEmailDesc('');
-            }
-        } else {
-            setEmailError(true);
-            setEmailDesc('Email address cannot be empty');
-        }
-    }
+     
 
     const handleChangePassword = (event) => {
         if (event.target.value !== '' && event.target.value.length >= 6 && event.target.value.length <= 15) {
@@ -274,21 +204,7 @@ const Register = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        disabled={codeActive}
-                                        helperText={emailDesc}
-                                        error={emailError}
-                                        id="email"
-                                        label="Email Address"
-                                        name="email"
-                                        inputProps={{ "data-testid": "account-signup-email" }}
-                                        onChange={(e)=>{handleChangeEmail(e)}}
-                                    />
-                                </Grid>
+                                 
 
                                 <Grid item xs={12}>
                                     <TextField
@@ -318,47 +234,6 @@ const Register = () => {
                                         required
                                         inputProps={{ "data-testid": "account-signup-confirm" }}
                                         onChange={(e)=>{handleChangeConfirm(e)}}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        select label="UserType"
-                                        value={userType}
-                                        style={{
-                                            marginTop: 15
-                                        }}
-                                        inputProps={{ "data-testid": "select-input" }}
-                                        onChange={(event) => handleType(event)}
-                                    >
-                                        <MenuItem value="customer">Customer</MenuItem>
-                                        <MenuItem value="provider">Provider</MenuItem>
-                                        <MenuItem value="admin">Admin</MenuItem>
-                                    </TextField>
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <Button
-                                        fullWidth
-                                        color={"success"}
-                                        variant={"contained"}
-                                        onClick={() => {sendEmail()}}>
-                                        send verify email
-                                    </Button>
-                                </Grid>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        error={enterCodeError}
-                                        helperText={enterCodeDesc}
-                                        id="email code"
-                                        label="Email Verify Code"
-                                        name="email code"
-                                        inputProps={{ "data-testid": "account-signup-emailcode" }}
-                                        onChange={(e)=>{handleEnterCode(e)}}
                                     />
                                 </Grid>
 
