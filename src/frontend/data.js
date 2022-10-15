@@ -1,49 +1,27 @@
 export const sliderItems = [
     {
         id: 1,
-        img: "https://i.ibb.co/Zx4xY1K/pexels-trang-doan-1128678.jpg",
-        title: "Fresh Suprise",
+        img: "https://content.thriveglobal.com/wp-content/uploads/2020/04/Master-Your-Personal-Finances.jpg",
+        title: "Plan Your Day",
         titleColor: '586A57',
-        desc: 'Embrace your \'fresh\' day with the freshest produce delivered to you directly from our local suppliers.',
+        desc: 'Your exclusive smart housekeeper \'Dolars\' will help to plan your day',
         bg: 'EDEBEB'
     },
     {
         id: 2,
-        img: "https://i.ibb.co/XbZLbvj/annie-spratt-JMj-Nn-Q2x-Fo-Y-unsplash.jpg",
-        title: "Eat Fresh, Stay Healthy",
+        img: "https://techcult.com/wp-content/uploads/2022/02/Best-AI-Chatbot-Online-2.jpg",
+        title: "Easier Communication",
         titleColor: '33201C',
-        desc: 'All meat comes from our partners who value about your health and lifestyle',
+        desc: 'Just simply chat with your housekeeper, it will provide all you need',
         bg: 'e0b17b'
     },
     {
         id: 3,
-        img: 'https://i.ibb.co/Qp4Xdfp/pexels-cup-of-couple-7657204.jpg,',
-        title: "Fresh in a Flash",
+        img: 'https://d32ijn7u0aqfv4.cloudfront.net/wp/wp-content/uploads/raw/financialcharts-laptop-tablet-desk_SOIN19096_651346382_is_1560x880.jpg',
+        title: "Analysis your data",
         titleColor: 'FFFFFF',
-        desc: 'We guarantee the fastest possible delivery with our global supply chain, so you can always enjoy the freshest meals.',
+        desc: 'We guarantee the fastest and secure solution to your finance budget, feel free to plan your day',
         bg: 'EAB84A'
     }
 ];
-
-export const categories = [
-    {
-        id: 1,
-        img: 'https://i.ibb.co/bX455V5/pexels-engin-akyurt-1435735.jpg',
-        title: 'Fruit',
-    },
-    {
-        id: 2,
-        img: 'https://i.ibb.co/XxhFq8P/pexels-pixabay-262967.jpg',
-        title: 'Vegetables',
-    },
-    {
-        id: 3,
-        img: 'https://i.ibb.co/PFvZVyC/pexels-alleksana-6107729.jpg',
-        title: 'Meat',
-    },
-    {
-        id: 4,
-        img: 'https://i.ibb.co/7SdBpCL/pexels-daria-shevtsova-3326546.jpg',
-        title: 'Diary'
-    }
-];
+ 

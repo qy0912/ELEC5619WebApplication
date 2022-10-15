@@ -75,9 +75,11 @@ const Footer = () => {
                 >
                 </LogoImg>
                 <Typography style={{margin: "20px 0px", color: "white"}} variant={"h7"}>
-                    At Freshly, we would like to provide a platform that connects customers with local 
-                    food providers, which acts as an online supermarket that provides convenience 
-                    for Australian households and also commercial opportunities for local businesses. 
+                    Dolar is a new concept of financial management system. It's not like a
+                    machine, but more like your personal housekeeper. Just a few click and
+                    have a chat with Dolar, it will help you to record your expense and income,
+                    analysis your financial status, also provide professional suggestions/plan 
+                    to your budget.
                 </Typography>
             </Left>
 
@@ -88,11 +90,9 @@ const Footer = () => {
 
                 <List>
                     <ListItem onClick={()=> navigate("/")} >Home</ListItem>
-                    <ListItem onClick={()=> navigate("/shopping")} >Products</ListItem>
-                    <ListItem onClick={()=> navigate("/shoppingCart")} >Shopping Cart</ListItem>
+                    <ListItem onClick={()=> navigate("/shopping")} >Start Chat</ListItem>
                     <ListItem onClick={()=> navigate("/setting")} >My Account</ListItem>
                     <ListItem onClick={()=> navigate("/")} >History</ListItem>
-                    <ListItem onClick={()=> navigate("/dashboard")}>Dashboard</ListItem>
                 </List>
             </Middle>
 
@@ -117,7 +117,7 @@ const Footer = () => {
                 <ContactItem>
                     <EmailIcon style={{marginRight: "10px"}}/>
                     <Typography variant={"h7"}>
-                        hellofreshlyeveryday@gmail.com
+                        planyourday@gmail.com
                     </Typography>
                 </ContactItem>
             </Right>

@@ -120,7 +120,7 @@ const Slider = () => {
                                 borderColor: '#' + item.titleColor,
                                 color: '#' + item.titleColor
                               }}
-                            >SHOP NOW</Button>
+                            >Start Your Journey</Button>
                         </InfoContainer>
                     </Slide>
 
