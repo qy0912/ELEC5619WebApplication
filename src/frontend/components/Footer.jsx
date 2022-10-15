@@ -70,7 +70,8 @@ const Footer = () => {
         <Container>
             <Left>
                 <LogoImg
-                    src="/assets/logoSmall.png"
+                    style = {{width:"30%", height: "30%"}}
+                    src="/assets/icon.png"
                     alt="logo Image"
                 >
                 </LogoImg>
