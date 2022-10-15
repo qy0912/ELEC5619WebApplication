@@ -9,10 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import plan.day.backend.annotation.CurrentUser;
 import plan.day.backend.model.CustomUserDetails;
+import plan.day.backend.model.Income;
 import plan.day.backend.model.Transaction;
+import plan.day.backend.payload.request.BudgetPlanningRequest;
 import plan.day.backend.payload.request.TimeFilterRequest;
 import plan.day.backend.payload.request.TransactionCreateRequest;
 import plan.day.backend.payload.response.GeneralApiResponse;
+import plan.day.backend.service.IncomeService;
 import plan.day.backend.service.TransactionService;
 import plan.day.backend.util.TransactionUtil;
 import java.text.ParseException;
@@ -25,6 +28,9 @@ public class TransactionController {
 
   @Autowired
   TransactionService transactionService;
+
+  @Autowired
+  IncomeService incomeService;
 
   @PostMapping("/create")
   public ResponseEntity<?> createTransaction(
@@ -75,5 +81,16 @@ public class TransactionController {
 
     List<Transaction> transaction  = transactionService.listTransactionWithDate(timefilterrequest,userDetails);
     return ResponseEntity.ok(new TransactionUtil().TransactionSummaryParser(transaction));
+  }
+
+  @PostMapping("/planning")
+  public ResponseEntity<?> getBudegetPlanning(
+          @Valid @RequestBody BudgetPlanningRequest budgetplanningrequest,
+          @CurrentUser CustomUserDetails userDetails) throws ParseException  {
+
+    List<Transaction> transaction  = transactionService.listTransactionWithRange(budgetplanningrequest,userDetails);
+    List<Income> income = incomeService.listIncomeWithRange(budgetplanningrequest,userDetails);
+
+    return ResponseEntity.ok(new TransactionUtil().BudgePlanningParser(transaction,income));
   }
 }
