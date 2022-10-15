@@ -45,6 +45,11 @@ public class UserService {
     return userRepository.existsByUsername(username);
   }
 
+  public User getUser(String username) {
+    return userRepository.findByUsername(username).orElseThrow(() ->
+        new UsernameNotFoundException("User not found!"));
+  }
+
   public User createUser(SignupRequest signupRequest) {
     User user = new User(signupRequest.getUsername(), signupRequest.getPassword());
     user.setPassword(passwordEncoder.encode(user.getPassword()));

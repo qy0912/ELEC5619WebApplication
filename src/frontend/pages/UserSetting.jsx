@@ -77,55 +77,39 @@ function UserSetting() {
 
     const handleUpdate = (e) => {
         e.preventDefault()
-        
-        if(newUserName === oldUserName ){
-            if(newUserName === '' || newUserName === undefined){
-                setMsg("You need to change at least one field!");
+
+        if (oldUserName !== undefined ) {
+            if (newUserName !== 'undefined' && newUserName !== ''){
+                const newInfo = {
+                    newUserName: newUserName,
+                    currentUserName: oldUserName
+                }
+                axios.put('/api/user/modify', newInfo,
+                    {headers: {'Authorization': localStorage.getItem("token")}})
+                .then(res => {
+                    if(res.data.status === "UserUpdated"){
+                        setMsg("Modify Successfully! ");
+                        setSeverity('success');
+                        setOpen(true);
+                        const Type = cookieMan.getType()
+                        cookieMan.logout();
+                        cookieMan.onLogin(newUserName);
+
+                    }else if(res.data.status === "Invalid"){
+                        setMsg("Username already exist!");
+                        setSeverity('error');
+                        setOpen(true);
+                    }
+                })
+            }
+            else{
+                validateAll()
+                setMsg("Username cannot be empty!");
                 setSeverity('error');
                 setOpen(true);
             }
-            setMsg("You need to change at least one field!");
-            setSeverity('error');
-            setOpen(true);
-        } else {
-            if (oldUserName !== undefined ) {
-                if (newUserName !== 'undefined' && newUserName !== ''){
-                    const newInfo = {
-                        newUserName: newUserName,
-                        // newEmail: newEmail,
-                        // newAddress: newAddress,
-                        currentUserName: oldUserName
-                    }
-                    axios.post('/api/user/setting', newInfo)
-                    .then(res => {
-                       
-
-                        if(res.data.status === "UserUpdated"){
-                            setMsg("Modify Successfully! ");
-                            setSeverity('success');
-                            setOpen(true);
-                            const Type = cookieMan.getType()
-                          //  setOldUserName(newUserName);
-                           // setOldEmail(newEmail);
-                           // setOldAddress(newAddress);
-                            cookieMan.logout();
-                            cookieMan.onLogin(newUserName);
-
-                        }else if(res.data.status === "Invalid"){
-                            setMsg("Username already exist!");
-                            setSeverity('error');
-                            setOpen(true);
-                        }
-                    })
-                }
-                else{
-                    validateAll()
-                    setMsg("Username cannot be empty!");
-                    setSeverity('error');
-                    setOpen(true);
-                }
-            }
         }
+
     }
 
     return (
@@ -156,7 +140,7 @@ function UserSetting() {
             >
                 <Stack justifyContent={"center"} direction={"row"}>
                     <Typography variant={"h5"} component={"header"}>
-                        Modify Personal Information
+                        Upload Avatar
                     </Typography>
                 </Stack>
 
@@ -171,45 +155,65 @@ function UserSetting() {
                         helperText={nameErrorDes}
                         margin={"normal"}
                     />
-                   
 
-                    <Stack
-                        direction={"row"}
-                        justifyContent={"flex-end"}
-                        className={classes.button}
-                    >
-                        <Link href="/password" variant="body2">
-                            {"Modify Password"}
-                        </Link>
-                    </Stack>
+                  <Stack justifyContent={"center"} direction={"row"}>
+                    <Button variant="contained" component="label">
+                      Upload
+                      <input hidden accept="image/*" multiple type="file" />
+                    </Button>
+                  </Stack>
 
-                    <Stack
-                        justifyContent={"space-between"}
-                        direction={"row"}
-                        className={classes.button}
-                    >
-                        <Button
-                            variant={"contained"}
-                            color={"primary"}
-                            onClick={backToLogin}
-                        >
-                            BACK
-                        </Button>
-
-                        <Button
-                            type="submit"
-                            variant={"contained"}
-                            endIcon={<PublishIcon/>}
-                            color={"primary"}
-                            onClick={handleUpdate}
-                        >
-                            Update
-                        </Button>
-                    </Stack>
                 </form>
 
             </Container>
             <br/>
+            <br/>
+            <Container
+                maxWidth={"xs"}
+            >
+              <Stack justifyContent={"center"} direction={"row"}>
+                <Typography variant={"h5"} component={"header"}>
+                  Modify Personal Information
+                </Typography>
+              </Stack>
+
+              <form noValidate autoComplete="off">
+                <TextField
+                    defaultValue={newUserName}
+                    label={"Username"}
+                    variant={"outlined"}
+                    fullWidth
+                    required
+                    helperText={nameErrorDes}
+                    margin={"normal"}
+                />
+
+                <Stack
+                    justifyContent={"space-between"}
+                    direction={"row"}
+                    className={classes.button}
+                >
+                  <Button
+                      variant={"contained"}
+                      color={"primary"}
+                      onClick={backToLogin}
+                  >
+                    BACK
+                  </Button>
+
+                  <Button
+                      type="submit"
+                      variant={"contained"}
+                      endIcon={<PublishIcon/>}
+                      color={"primary"}
+                      onClick={handleUpdate}
+                  >
+                    Update
+                  </Button>
+                </Stack>
+              </form>
+            </Container>
+          <br/>
         </Paper>
         </Container>
     );

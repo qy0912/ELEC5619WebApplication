@@ -21,6 +21,9 @@ const AccountPopover = () => {
     const navigate = useNavigate();
     const accountType = cookieMan.getType()
     const [anchorEl, setAnchorEl] = useState(null);
+    // const avatar = cookieMan.loginUser() === undefined ?
+    //     "/assets/ava_icon.png" :
+    //     "http://localhost:8080/avatar/83e5e9a9-4f34-4cd1-a8a2-27b4e39e6586.png";
     const handleOpen = (e) => {
         setAnchorEl(e.currentTarget);
     }
@@ -31,6 +34,7 @@ const AccountPopover = () => {
 
     const handleLogOut = () => {
         cookieMan.logout();
+        localStorage.clear()
 
         if (window.location.pathname==='/'){
             window.location.reload();
@@ -104,7 +108,8 @@ const AccountPopover = () => {
                 color="inherit"
             >
                 <img 
-                    src="/assets/ava_icon.png" 
+                    src="/assets/ava_icon.png"
+                    // src={avatar}
                     style={{maxWidth: 25}}
                 />
             </IconButton>

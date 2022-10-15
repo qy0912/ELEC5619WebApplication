@@ -12,9 +12,8 @@ const onLogin = (user) => {
     // Decrypt
     cookie.save('login_time', t+"", {path: '/'})
     cookie.save('userInfo', ciphertext, { path: '/' })
-     
-
 }
+
 const getType = ()=>{
     return cookie.load('account_type')
 }

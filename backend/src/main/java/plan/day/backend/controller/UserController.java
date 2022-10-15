@@ -46,8 +46,9 @@ public class UserController {
         ));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String generateToken = jwtTokenUtil.generateToken(authentication);
-
-    return ResponseEntity.ok(new JwtAuthenticationResponse(generateToken));
+    User user = userService.getUser(loginRequest.getUsername());
+    return ResponseEntity.ok(new JwtAuthenticationResponse(generateToken, user.getUsername(),
+        user.getGender(), user.getAvatar(), user.getTheme()));
   }
 
   @PostMapping("/signup")
@@ -65,6 +66,10 @@ public class UserController {
 
   @PutMapping("/modify")
   public ResponseEntity<?> modify(@Valid @RequestBody UserModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
+    if (userService.checkUserNameAvailable(userModifyRequest.getUsername())) {
+      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"),
+          HttpStatus.BAD_REQUEST);
+    }
     User modifyUser = userService.modifyUser(userModifyRequest, userDetails);
     if (modifyUser!= null) {
       return ResponseEntity.ok(new GeneralApiResponse(true, "User Detail modified!"));
