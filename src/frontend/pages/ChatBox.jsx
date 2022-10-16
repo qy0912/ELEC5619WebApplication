@@ -210,7 +210,30 @@ export default function ChatBox() {
             msgs.push(dolarBody);
             setR(true);
             console.log(res);
-          })
+
+            console.log(result[0])
+            const newTran = {
+              source: result[1],
+              category_name: result[1],
+              totalAmount: Number(result[0]),
+              description: "my new transaction to "+ result[1]
+            }
+            axios
+            .post("/api/transaction/create", newTran,
+            {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            })
+            .then((res) => {
+              // msgs.push(dolarBody);
+              // setR(true);
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err.data);
+            });
+            })
           .catch((err) => {
             console.log(err.data);
           });
