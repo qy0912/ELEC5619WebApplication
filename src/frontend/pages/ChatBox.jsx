@@ -132,7 +132,7 @@ export default function ChatBox() {
   // const [file, setFile] = useState(null);
   // const [imageUrl, setImageUrl] = useState(null);
   const [text, setText] = useState("");
-  const [msgs, setMsgs] = useState(data);
+  const [msgs, setMsgs] = useState(localStorage.getItem("chathistory"));
   const ImageInput = useRef(null);
   const messagesEnd = useRef(null);
   const [respond, setR] = useState(false);
