@@ -76,15 +76,15 @@ export default function AppExpense() {
             
             var sale = trans.totalAmount
             data[0][i] += sale
-            if(trans.category_name=== 'Food') {
+            if(trans.category=== 'Food') {
               data[1][i] += sale
-            } else if (trans.category_name === 'Living') {
+            } else if (trans.category === 'Living') {
               data[2][i] += sale
-            } else if (trans.category_name === 'Transportation') {
+            } else if (trans.category === 'Transportation') {
               data[3][i] += sale
-            } else if (trans.category_name === 'Insurance') {
+            } else if (trans.category === 'Insurance') {
               data[4][i] += sale
-            } else if (trans.category_name === 'Housing') {
+            } else if (trans.category === 'Housing') {
               data[5][i] += sale
             }
           }

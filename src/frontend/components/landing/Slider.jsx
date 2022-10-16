@@ -101,7 +101,7 @@ const Slider = () => {
         navigate("/login")
       }
       else{
-        navigate("/")
+        navigate("/chatbox")
       }
   };
 
