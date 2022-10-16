@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.Calendar;
 import java.util.List;
-import javafx.beans.binding.DoubleExpression;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -4,9 +4,11 @@
     "add income",
     "add transaction",
     "budget plan",
+    "financial report",
     "my incomes",
     "my transactions",
-    "payment type"
+    "payment type",
+    "summary"
   ],
   "threshold":0.5,
   "positive_label":null

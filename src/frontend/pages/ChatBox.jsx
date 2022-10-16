@@ -8,6 +8,7 @@ import {
   TextField,
   IconButton,
   List,
+  linkClasses,
 } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 
@@ -15,11 +16,14 @@ import { red } from "@mui/material/colors";
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { makeStyles, styled } from "@mui/styles";
+import { useHref, useNavigate } from "react-router-dom";
+import { stringify } from "uuid";
+ 
 
 let data = [
-  { user: "Dolars", msg: "hello", is_img: false },
-  { user: "Me", msg: "hi", is_img: false },
-  { user: "Dolars", msg: "hello", is_img: false },
+  { user: "Dolars", msg: "hello", is_img: false, is_url: false },
+  { user: "Me", msg: "hi", is_img: false, is_url: false },
+  { user: "Dolars", msg: "hello", is_img: false, is_url: false },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +76,7 @@ const Img = styled("img")({
 });
 
 const MsgCard = (input) => {
+  const navigate = useNavigate();
   const classes = useStyles();
   return (
     <Box>
@@ -84,7 +89,12 @@ const MsgCard = (input) => {
             <Typography variant="body2" color="text.secondary">
               {input.msg.user}
             </Typography>
-            {input.msg.is_img ? (
+            {input.msg.is_url ? (
+              <IconButton 
+                url={input.msg.url}
+                onClick = {()=>{navigate(input.msg.url)}}
+              > Here is your financial summary report </IconButton>
+            ) : input.msg.is_img ? (
               <img src={input.msg.img} />
             ) : (
               <Typography variant="body1">{input.msg.msg}</Typography>
@@ -103,7 +113,7 @@ const MsgCard = (input) => {
               <Typography variant="body1">{input.msg.msg}</Typography>
             )}
           </Stack>
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          <Avatar src={localStorage.getItem("avatar")} aria-label="recipe">
             {input.msg.user[0]}
           </Avatar>
         </Stack>
@@ -113,10 +123,11 @@ const MsgCard = (input) => {
 };
 
 export default function ChatBox() {
+  const navigate = useNavigate();
   const classes = useStyles();
   // const [file, setFile] = useState(null);
   // const [imageUrl, setImageUrl] = useState(null);
-  const [text, setText] = useState(null);
+  const [text, setText] = useState("");
   const [msgs, setMsgs] = useState(data);
   const ImageInput = useRef(null);
   const messagesEnd = useRef(null);
@@ -147,13 +158,61 @@ export default function ChatBox() {
     let body = {
       user: "Me",
       msg: null,
+      is_url: false,
       is_img: true,
       img: URL.createObjectURL(event.target.files[0]),
     };
+    //external API
+    console.log("The file to be sent is:", event.target.files[0]);
+    // 将图像发送到后端，使用 fetch 或者 axios 都行
+    const FormData = require("form-data");
+    const data = new FormData();
+    data.append("file", event.target.files[0]);
+
+    const options = {
+      method: "POST",
+      url: "https://image-to-base64.p.rapidapi.com/imgtob64",
+      headers: {
+        "X-RapidAPI-Key": "8fa618dfaemshcc72d37d2642c5ep1277f8jsn5b46ad4f8d02",
+        "X-RapidAPI-Host": "image-to-base64.p.rapidapi.com",
+      },
+      data: data,
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log("image base64 is: ");
+        console.log(response.data);
+
+        let data = { url: "data:image/png;base64," + response.data };
+
+        axios
+          .post("/api/img/recImg", data)
+          .then((res) => {
+            let dolarBody = {
+              user: "Dolars",
+              msg: "res.data.slice(10)",
+              is_img: false,
+              is_url: false,
+            };
+            msgs.push(dolarBody);
+            setR(true);
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err.data);
+          });
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+
     msgs.push(body);
     ImageInput.current.value = "";
     setMsgs(msgs);
   };
+
   const handlePush = (event) => {
     if (text.length < 1) {
       return;
@@ -163,6 +222,7 @@ export default function ChatBox() {
       user: "Me",
       msg: text,
       is_img: false,
+      is_url: false,
     };
     msgs.push(body);
 
@@ -182,6 +242,7 @@ export default function ChatBox() {
           user: "Dolars",
           msg: undefined,
           is_img: false,
+          is_url: false,
         };
         if (cat === "add transaction") {
           body.msg =
@@ -192,13 +253,20 @@ export default function ChatBox() {
         } else if (cat === "payment type") {
           body.msg = "Here is your information about payment type";
         } else if (cat === "budget plan") {
-          body.msg = "Here is your budget plan";
+          body.msg =
+            "Here is your budget plan ";
+          // navigate('/dashboard')
         } else if (cat === "my transactions") {
           body.msg = "There are your transactions";
         } else if (cat === "my incomes") {
           body.msg = "Income is here:";
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
+        } else if (cat === "financial report") {
+          body.msg =
+            "Here is your budget plan ";
+          body.url = "/dashboard";
+          body.is_url = true;
         }
         msgs.push(body);
         setR(true);

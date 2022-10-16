@@ -39,7 +39,7 @@ public class ImgController {
             headers.add("apikey", apiKey);
 
             MultiValueMap<String , String> params = new LinkedMultiValueMap<String,String>();
-            params.add("url", url);
+            params.add("base64Image", url);
 
             String result = HttpUtil.postRequestByUrlencoded(api, params, headers);
             return result;

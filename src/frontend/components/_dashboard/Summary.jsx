@@ -16,6 +16,7 @@ import AppTotalExpense from './statistic/AppTotalExpense';
 import AppTotalIncome from './statistic/AppTotalIncome';
 import AppExpense from './statistic/AppExpense';
 import { useNavigate } from 'react-router-dom';
+import { IconButton } from '@mui/material';
 export default function Summary() {
   const navigate = useNavigate();
     const [weeklyExpense, setWeeklyExpense] = useState(0)
@@ -130,6 +131,12 @@ export default function Summary() {
 
     return (
       <div>
+        <IconButton
+                onClick={()=> {navigate('/chatbox')}}
+                color="inherit"
+            >
+             Back to Chat
+            </IconButton>
       <Container>
         <Avatar
                 style={{
@@ -144,7 +151,10 @@ export default function Summary() {
                         color: "#586A57"
                     }}
                 />
+                
+
         </Avatar>
+         
         <Typography variant={"h5"} component={"h1"} sx={{color:'#586A57', paddingBottom:'5%', textAlign:'center'}}>
                 Financial Summary Report
             </Typography>
