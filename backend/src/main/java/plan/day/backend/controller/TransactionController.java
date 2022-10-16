@@ -87,10 +87,8 @@ public class TransactionController {
   public ResponseEntity<?> getBudegetPlanning(
           @Valid @RequestBody BudgetPlanningRequest budgetplanningrequest,
           @CurrentUser CustomUserDetails userDetails) throws ParseException  {
-
     List<Transaction> transaction  = transactionService.listTransactionWithRange(budgetplanningrequest,userDetails);
     List<Income> income = incomeService.listIncomeWithRange(budgetplanningrequest,userDetails);
-
     return ResponseEntity.ok(new TransactionUtil().BudgePlanningParser(transaction,income));
   }
 }

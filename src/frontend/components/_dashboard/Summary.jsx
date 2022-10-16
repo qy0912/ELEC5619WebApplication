@@ -15,6 +15,7 @@ import axios from 'axios';
 import cookieMan from '../../cookieManager'
 import {Avatar} from '@mui/material'
 import BarChartIcon from '@mui/icons-material//BarChart';
+import {transactionData} from './mockData';
 export default function Summary() {
 
     const [weeklySales, setWeeklySales] = useState(0)
@@ -42,14 +43,12 @@ export default function Summary() {
         const endDate = constructPastDate(0)
         let type = cookieMan.getType()
         const req = {
-          type : type,
-          supplier: supplierName,
-          category: 'all',
-          startdate: startDate,
-          enddate: endDate
+          start: "2022-09-16T01:00:53.465Z",
+         finish: "2022-10-18T01:00:53.465Z"
         }
   
-        let response = axios.post('/api/dashboard/chartInfo/getTransactionsCategory', req)
+        let response = axios.post('/api/transaction/tfilter', req,
+        {headers: {'Authorization': localStorage.getItem("token"), "Content-Type": "multipart/form-data"}})
         .then(res => {
           var totalSales = 0
           var sold = 0
@@ -66,6 +65,9 @@ export default function Summary() {
         .catch(err =>{
           console.log(err)
         })
+
+        
+          
     }
 
     const computeSaleIncrease = (sales) => {
@@ -134,7 +136,7 @@ export default function Summary() {
                 />
         </Avatar>
         <Typography variant={"h5"} component={"h1"} sx={{color:'#586A57', paddingBottom:'5%', textAlign:'center'}}>
-                Statistical Summary
+                Financial Summary Report
             </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} lg = {3}>
@@ -149,7 +151,7 @@ export default function Summary() {
           </Grid>
           <Grid item xs={12} sm={6} lg = {3}>
           <AppNewCustomer  amount="22" 
-            amount = {customers}
+            customers = {customers}
           />
           </Grid>
           <Grid item xs={12} sm={6} lg = {3}>
