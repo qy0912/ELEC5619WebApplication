@@ -140,7 +140,7 @@ export default function ChatBox() {
     if (messagesEnd && messagesEnd.current) {
       messagesEnd.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [text]);
+  }, [text, msgs]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -194,9 +194,10 @@ export default function ChatBox() {
         axios
           .post("/api/img/recImg", data)
           .then((res) => {
+            let result = res.data.message.split(" ");
             let dolarBody = {
               user: "Dolars",
-              msg: "res.data.slice(10)",
+              msg: "You have use " + result[0] + " dolars on " + result[1],
               is_img: false,
               is_url: false,
             };
