@@ -54,7 +54,7 @@ public class UserController {
 
   @PostMapping("/signup")
   public ResponseEntity<?> register(@Valid @RequestBody SignupRequest signupRequest){
-    if (userService.checkUserNameAvailable(signupRequest.getUsername())) {
+    if (userService.checkUserNameExists(signupRequest.getUsername())) {
       return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
     }
     User user = userService.createUser(signupRequest);
@@ -67,7 +67,7 @@ public class UserController {
   @PutMapping("/modify")
   public ResponseEntity<?> modify(@Valid @RequestBody UserModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
     if (!Objects.equals(userService.getUser(userDetails.getId()).getUsername(), userModifyRequest.getUsername())){
-      if (userService.checkUserNameAvailable(userModifyRequest.getUsername())) {
+      if (userService.checkUserNameExists(userModifyRequest.getUsername())) {
         return ResponseEntity.ok(new GeneralApiResponse(false, "Username already registered!"));
       }
     }
