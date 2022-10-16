@@ -47,7 +47,6 @@ const Login = () => {
             "token",
             res.data.tokenType + " " + res.data.accessToken
           );
-          localStorage.setItem("chathistory", []);
           localStorage.setItem("username", res.data.username);
           localStorage.setItem("gender", res.data.gender);
           localStorage.setItem("avatar", res.data.avatar);

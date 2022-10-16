@@ -132,7 +132,12 @@ export default function ChatBox() {
   // const [file, setFile] = useState(null);
   // const [imageUrl, setImageUrl] = useState(null);
   const [text, setText] = useState("");
-  const [msgs, setMsgs] = useState(localStorage.getItem("chathistory"));
+  if (localStorage.getItem("chathistory") === null) {
+    localStorage.setItem("chathistory", JSON.stringify([]));
+  }
+  const [msgs, setMsgs] = useState(
+    JSON.parse(localStorage.getItem("chathistory"))
+  );
   const ImageInput = useRef(null);
   const messagesEnd = useRef(null);
   const [respond, setR] = useState(false);
@@ -147,6 +152,7 @@ export default function ChatBox() {
       if (respond) {
         setMsgs(msgs.slice(0));
         setR(false);
+        localStorage.setItem("chathistory", JSON.stringify(msgs));
         if (messagesEnd && messagesEnd.current) {
           messagesEnd.current.scrollIntoView({ behavior: "smooth" });
         }
