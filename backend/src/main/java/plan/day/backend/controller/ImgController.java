@@ -61,8 +61,9 @@ public class ImgController {
             }
             System.out.println(resultDouble);
             String[] categoryList = {"Food", "Living", "Transportation", "Insurance", "Housing", "Others"};
-            Random r = new Random();
-            int categoryNum = r.nextInt(categoryList.length-1);
+            // Random r = new Random();
+            // int categoryNum = r.nextInt(categoryList.length-1);
+            int categoryNum = (int) (Math.ceil(resultDouble) % categoryList.length);
             return resultDouble + " " + categoryList[categoryNum];
         } catch (Exception e) {
             throw new RuntimeException(e);

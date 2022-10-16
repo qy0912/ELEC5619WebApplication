@@ -18,7 +18,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { makeStyles, styled } from "@mui/styles";
 import { useHref, useNavigate } from "react-router-dom";
 import { stringify } from "uuid";
- 
 
 let data = [
   { user: "Dolars", msg: "hello", is_img: false, is_url: false },
@@ -90,10 +89,15 @@ const MsgCard = (input) => {
               {input.msg.user}
             </Typography>
             {input.msg.is_url ? (
-              <IconButton 
+              <IconButton
                 url={input.msg.url}
-                onClick = {()=>{navigate(input.msg.url)}}
-              > Here is your financial summary report </IconButton>
+                onClick={() => {
+                  navigate(input.msg.url);
+                }}
+              >
+                {" "}
+                Here is your financial summary report{" "}
+              </IconButton>
             ) : input.msg.is_img ? (
               <img src={input.msg.img} />
             ) : (
@@ -253,8 +257,7 @@ export default function ChatBox() {
         } else if (cat === "payment type") {
           body.msg = "Here is your information about payment type";
         } else if (cat === "budget plan") {
-          body.msg =
-            "Here is your budget plan ";
+          body.msg = "Here is your budget plan ";
           // navigate('/dashboard')
         } else if (cat === "my transactions") {
           body.msg = "There are your transactions";
@@ -263,8 +266,7 @@ export default function ChatBox() {
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
         } else if (cat === "financial report") {
-          body.msg =
-            "Here is your budget plan ";
+          body.msg = "Here is your budget plan ";
           body.url = "/dashboard";
           body.is_url = true;
         }
