@@ -120,11 +120,27 @@ export default function ChatBox() {
   const [msgs, setMsgs] = useState(data);
   const ImageInput = useRef(null);
   const messagesEnd = useRef(null);
+  const [respond, setR] = useState(false);
   useEffect(() => {
     if (messagesEnd && messagesEnd.current) {
       messagesEnd.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [text]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (respond) {
+        setMsgs(msgs.slice(0));
+        setR(false);
+        if (messagesEnd && messagesEnd.current) {
+          messagesEnd.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  });
   const onFileChange = (event) => {
     // setFile(event.target.files[0]);
     // setImageUrl(URL.createObjectURL(event.target.files[0]));
@@ -167,7 +183,6 @@ export default function ChatBox() {
           msg: undefined,
           is_img: false,
         };
-        console.log(cat);
         if (cat === "add transaction") {
           body.msg =
             "Please provide your transaction information(type, data, paied)";
@@ -186,7 +201,7 @@ export default function ChatBox() {
           body.msg = "I can not understand you, I am just a bot";
         }
         msgs.push(body);
-        setMsgs(msgs);
+        setR(true);
       });
     setText("");
     setMsgs(msgs);
