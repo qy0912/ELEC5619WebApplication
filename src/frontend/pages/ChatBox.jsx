@@ -16,13 +16,13 @@ import { red } from "@mui/material/colors";
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { makeStyles, styled } from "@mui/styles";
-import { useHref, useNavigate } from 'react-router-dom';
+import { useHref, useNavigate } from "react-router-dom";
 import { stringify } from "uuid";
 
 let data = [
-  { user: "Dolars", msg: "hello", is_img: false },
-  { user: "Me", msg: "hi", is_img: false },
-  { user: "Dolars", msg: "hello", is_img: false },
+  { user: "Dolars", msg: "hello", is_img: false, is_url: false },
+  { user: "Me", msg: "hi", is_img: false, is_url: false },
+  { user: "Dolars", msg: "hello", is_img: false, is_url: false },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -87,7 +87,12 @@ const MsgCard = (input) => {
             <Typography variant="body2" color="text.secondary">
               {input.msg.user}
             </Typography>
-            {input.msg.is_img ? (
+            {input.msg.is_url ? (
+              <iframe
+                src={input.msg.url}
+                title="W3Schools Free Online Web Tutorials"
+              ></iframe>
+            ) : input.msg.is_img ? (
               <img src={input.msg.img} />
             ) : (
               <Typography variant="body1">{input.msg.msg}</Typography>
@@ -116,7 +121,7 @@ const MsgCard = (input) => {
 };
 
 export default function ChatBox() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const classes = useStyles();
   // const [file, setFile] = useState(null);
   // const [imageUrl, setImageUrl] = useState(null);
@@ -132,10 +137,8 @@ export default function ChatBox() {
   }, [text]);
 
   useEffect(() => {
-
     const timer = setInterval(() => {
       if (respond) {
-        
         setMsgs(msgs.slice(0));
         setR(false);
         if (messagesEnd && messagesEnd.current) {
@@ -153,55 +156,61 @@ export default function ChatBox() {
     let body = {
       user: "Me",
       msg: null,
+      is_url: false,
       is_img: true,
       img: URL.createObjectURL(event.target.files[0]),
     };
-  //external API
+    //external API
     console.log("The file to be sent is:", event.target.files[0]);
     // 将图像发送到后端，使用 fetch 或者 axios 都行
     const FormData = require("form-data");
     const data = new FormData();
-    data.append('file',event.target.files[0] );
+    data.append("file", event.target.files[0]);
 
     const options = {
-      method: 'POST',
-      url: 'https://image-to-base64.p.rapidapi.com/imgtob64',
+      method: "POST",
+      url: "https://image-to-base64.p.rapidapi.com/imgtob64",
       headers: {
-        'X-RapidAPI-Key': '8fa618dfaemshcc72d37d2642c5ep1277f8jsn5b46ad4f8d02',
-        'X-RapidAPI-Host': 'image-to-base64.p.rapidapi.com',
+        "X-RapidAPI-Key": "8fa618dfaemshcc72d37d2642c5ep1277f8jsn5b46ad4f8d02",
+        "X-RapidAPI-Host": "image-to-base64.p.rapidapi.com",
       },
-      data: data
+      data: data,
     };
 
-    axios.request(options).then(function (response) {
-        console.log("image base64 is: ")
-      console.log(response.data);
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log("image base64 is: ");
+        console.log(response.data);
 
-      let data = {"url": 'data:image/png;base64,'+response.data};
-        
-        axios.post('/api/img/recImg', data)
-            .then(res => {
-              let dolarBody = {
-                user: "Dolars",
-                msg: "res.data.slice(10)",
-                is_img: false,
-              };
-              msgs.push(dolarBody)
-              setR(true)
-                console.log(res);
-            })
-            .catch(err => {
-                console.log(err.data);
-            });
-    }).catch(function (error) {
-      console.error(error);
-    });
+        let data = { url: "data:image/png;base64," + response.data };
+
+        axios
+          .post("/api/img/recImg", data)
+          .then((res) => {
+            let dolarBody = {
+              user: "Dolars",
+              msg: "res.data.slice(10)",
+              is_img: false,
+              is_url: false,
+            };
+            msgs.push(dolarBody);
+            setR(true);
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err.data);
+          });
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
 
     msgs.push(body);
     ImageInput.current.value = "";
     setMsgs(msgs);
   };
- 
+
   const handlePush = (event) => {
     if (text.length < 1) {
       return;
@@ -211,6 +220,7 @@ export default function ChatBox() {
       user: "Me",
       msg: text,
       is_img: false,
+      is_url: false,
     };
     msgs.push(body);
 
@@ -230,6 +240,7 @@ export default function ChatBox() {
           user: "Dolars",
           msg: undefined,
           is_img: false,
+          is_url: false,
         };
         if (cat === "add transaction") {
           body.msg =
@@ -240,7 +251,10 @@ export default function ChatBox() {
         } else if (cat === "payment type") {
           body.msg = "Here is your information about payment type";
         } else if (cat === "budget plan") {
-          body.msg = "Here is your budget plan "+ "http://localhost:3000/dashboard";
+          body.msg =
+            "Here is your budget plan " + "http://localhost:3000/dashboard";
+          body.url = "http://localhost:3000/dashboard";
+          body.is_url = true;
           // navigate('/dashboard')
         } else if (cat === "my transactions") {
           body.msg = "There are your transactions";
@@ -248,9 +262,8 @@ export default function ChatBox() {
           body.msg = "Income is here:";
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
-        }
-        else if (cat === "report") {
-          navigate('/dashboard')
+        } else if (cat === "report") {
+          navigate("/dashboard");
         }
         msgs.push(body);
         setR(true);
@@ -258,7 +271,7 @@ export default function ChatBox() {
     setText("");
     setMsgs(msgs);
     // messagesEnd.current.scrollIntoView({ behavior: "smooth" });
- };
+  };
 
   return (
     <Paper className={classes.root}>
