@@ -151,7 +151,16 @@ export default function ChatBox() {
     msgs.push(body);
 
     let detail = axios
-      .post("/api/dolars/classification", { words: text })
+      .post(
+        "/api/dolars/classification",
+        { words: text },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
       });
