@@ -18,8 +18,13 @@
   },
   "labels":{
     "textcat":[
-      "hello",
-      "help"
+      "Unrecognized",
+      "add income",
+      "add transaction",
+      "budget plan",
+      "my incomes",
+      "my transactions",
+      "payment type"
     ]
   },
   "pipeline":[

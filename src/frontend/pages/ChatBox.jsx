@@ -12,15 +12,16 @@ import {
 import ImageIcon from "@mui/icons-material/Image";
 
 import { red } from "@mui/material/colors";
-
+import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, styled } from "@mui/styles";
 
 let data = [
   { user: "Dolars", msg: "hello", is_img: false },
   { user: "Me", msg: "hi", is_img: false },
   { user: "Dolars", msg: "hello", is_img: false },
 ];
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginLeft: "20%",
@@ -61,6 +62,15 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 140,
   },
 }));
+const Img = styled("img")({
+  top: 0,
+  width: "80%",
+  height: "80%",
+  maxHeight: 400,
+  objectFit: "cover",
+  position: "flex",
+});
+
 const MsgCard = (input) => {
   const classes = useStyles();
   return (
@@ -74,7 +84,11 @@ const MsgCard = (input) => {
             <Typography variant="body2" color="text.secondary">
               {input.msg.user}
             </Typography>
-            <Typography variant="body1">{input.msg.msg}</Typography>
+            {input.msg.is_img ? (
+              <img src={input.msg.img} />
+            ) : (
+              <Typography variant="body1">{input.msg.msg}</Typography>
+            )}
           </Stack>
         </Stack>
       ) : (
@@ -83,9 +97,11 @@ const MsgCard = (input) => {
             <Typography variant="body2" color="text.secondary">
               {input.msg.user}
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              {input.msg.msg}
-            </Typography>
+            {input.msg.is_img ? (
+              <img src={input.msg.img} />
+            ) : (
+              <Typography variant="body1">{input.msg.msg}</Typography>
+            )}
           </Stack>
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
             {input.msg.user[0]}
@@ -98,8 +114,8 @@ const MsgCard = (input) => {
 
 export default function ChatBox() {
   const classes = useStyles();
-  const [file, setFile] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
+  // const [file, setFile] = useState(null);
+  // const [imageUrl, setImageUrl] = useState(null);
   const [text, setText] = useState(null);
   const [msgs, setMsgs] = useState(data);
   const ImageInput = useRef(null);
@@ -110,9 +126,17 @@ export default function ChatBox() {
     }
   }, [text]);
   const onFileChange = (event) => {
-    setFile(event.target.files[0]);
-    setImageUrl(URL.createObjectURL(event.target.files[0]));
+    // setFile(event.target.files[0]);
+    // setImageUrl(URL.createObjectURL(event.target.files[0]));
+    let body = {
+      user: "Me",
+      msg: null,
+      is_img: true,
+      img: URL.createObjectURL(event.target.files[0]),
+    };
+    msgs.push(body);
     ImageInput.current.value = "";
+    setMsgs(msgs);
   };
   const handlePush = (event) => {
     if (text.length < 1) {
@@ -125,6 +149,46 @@ export default function ChatBox() {
       is_img: false,
     };
     msgs.push(body);
+
+    let detail = axios
+      .post(
+        "/api/dolars/classification",
+        { words: text },
+        {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
+      )
+      .then((res) => {
+        let cat = res.data.response[0];
+        let body = {
+          user: "Dolars",
+          msg: undefined,
+          is_img: false,
+        };
+        console.log(cat);
+        if (cat === "add transaction") {
+          body.msg =
+            "Please provide your transaction information(type, data, paied)";
+        } else if (cat === "add income") {
+          body.msg =
+            "Please provide your income information(type, data, paied)";
+        } else if (cat === "payment type") {
+          body.msg = "Here is your information about payment type";
+        } else if (cat === "budget plan") {
+          body.msg = "Here is your budget plan";
+        } else if (cat === "my transactions") {
+          body.msg = "There are your transactions";
+        } else if (cat === "my incomes") {
+          body.msg = "Income is here:";
+        } else if (cat === "Unrecognized") {
+          body.msg = "I can not understand you, I am just a bot";
+        }
+        msgs.push(body);
+        setMsgs(msgs);
+      });
+    setText("");
     setMsgs(msgs);
     // messagesEnd.current.scrollIntoView({ behavior: "smooth" });
   };

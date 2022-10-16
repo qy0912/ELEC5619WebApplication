@@ -1,7 +1,12 @@
 {
   "labels":[
-    "hello",
-    "help"
+    "Unrecognized",
+    "add income",
+    "add transaction",
+    "budget plan",
+    "my incomes",
+    "my transactions",
+    "payment type"
   ],
   "threshold":0.5,
   "positive_label":null
