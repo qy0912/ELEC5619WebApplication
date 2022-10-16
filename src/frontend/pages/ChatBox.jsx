@@ -95,8 +95,7 @@ const MsgCard = (input) => {
                   navigate(input.msg.url);
                 }}
               >
-                {" "}
-                Here is your financial summary report{" "}
+                Here is your financial summary report
               </IconButton>
             ) : input.msg.is_img ? (
               <img src={input.msg.img} />
@@ -210,7 +209,30 @@ export default function ChatBox() {
             msgs.push(dolarBody);
             setR(true);
             console.log(res);
-          })
+
+            console.log(result[0])
+            const newTran = {
+              source: result[1],
+              category_name: result[1],
+              totalAmount: Number(result[0]),
+              description: "my new transaction to "+ result[1]
+            }
+            axios
+            .post("/api/transaction/create", newTran,
+            {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            })
+            .then((res) => {
+              // msgs.push(dolarBody);
+              // setR(true);
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err.data);
+            });
+            })
           .catch((err) => {
             console.log(err.data);
           });
@@ -406,6 +428,10 @@ export default function ChatBox() {
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
         } else if (cat === "financial report") {
+          body.msg = "Here is your budget plan ";
+          body.url = "/dashboard";
+          body.is_url = true;
+        }else if (cat === "summary") {
           body.msg = "Here is your budget plan ";
           body.url = "/dashboard";
           body.is_url = true;
