@@ -64,7 +64,7 @@ public class TransactionUtil {
                 fullTransactions.add(jsonObject);
                 catSum +=  dictionary.get(key).get(i).getTotalAmount();
             }
-            catObject.put("catergory_name",key);
+            catObject.put("category_name",key);
             catObject.put("transactions",fullTransactions);
             catObject.put("category_sum",catSum);
             catObject.put("category_percentage",catSum/sum*100);

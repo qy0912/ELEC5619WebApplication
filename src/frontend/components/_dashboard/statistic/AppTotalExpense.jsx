@@ -34,7 +34,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 const TOTAL = 714000;
 
-export default function AppNewCustomer(props) {
+export default function AppTotalExpense(props) {
   const { amount } = props
 
   return (
@@ -42,9 +42,9 @@ export default function AppNewCustomer(props) {
       <IconWrapperStyle>
         <EmojiPeopleRoundedIcon/>
       </IconWrapperStyle>
-      <Typography variant="h3">{ amount }</Typography>
+      <Typography variant="h3">${ amount }</Typography>
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }} data-testid={"new customer"}>
-        New Customers
+        Total Expense
       </Typography>
     </RootStyle>
   );

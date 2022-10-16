@@ -32,63 +32,49 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 }));
 
 
-const CHART_DATA = [4344, 5435, 1443, 8000];
+const CHART_DATA = [4344, 5435, 1443, 8000,123040];
 
-export default function AppSalesPercentage(props) {
-  const {data} = props
+export default function AppExpensePercentage(props) {
   const theme = useTheme();
-
   const [chartData, setChartData] = useState([])
   const [labels, setLabels] = useState([])
-
   useEffect(() => {
-    var dist = {}
-    var total = 0
-    var keys = []
-    if(data === undefined) {
-      return
-    }
-    for(let i = 0; i < data.length; i++) {
-      if(dist[data[i].productname] === undefined) {
-        dist[data[i].productname] = data[i].price * data[i].amount
-      } else {
-        dist[data[i].productname] += data[i].price * data[i].amount
-      }
-      total += data[i].price * data[i].amount
+    percentageSeasonExpense()
+  },[])
+  const constructPastDate = (days) => {
+    var date = new Date()
+    var pastDate = date.getDate() - days
+    date.setDate(pastDate)
+    return date
+}
+  const percentageSeasonExpense = () => {
+    const startDate = constructPastDate(30)
+    const endDate = constructPastDate(0)
+    const req = {
+      start: startDate,
+     finish: endDate
     }
 
-    for(const [key, value] of Object.entries(dist)) {
-      keys.push(key)
-    }
-    keys.sort((e1, e2) => {
-      if(dist[e1] > dist[e2]) {
-        return -1
-      } else if(dist[e1] < dist[e2]) {
-        return 1
-      } else {
-        return 0
+    let response = axios.post('/api/transaction/summary', req,
+    {headers: {'Authorization': localStorage.getItem("token")}})
+    .then(res => {
+      let dataHolder = []
+      let labelHolder = []
+      for(let i = 0; i < res.data.categories.length; i++) {
+         
+        dataHolder.push( res.data.categories[i].category_sum)
+        labelHolder.push(res.data.categories[i].category_name)
+         
       }
+      setLabels(labelHolder)
+      setChartData(dataHolder)
+        
     })
-
-    const dataHolder = []
-    let others = total
-
+    .catch(err =>{
+      console.log(err)
+    }) 
     
-    var labelHolder = []
-    let amount = Math.min(3, keys.length)
-    for(let i = 0; i < amount; i++) {
-      dataHolder.push(dist[keys[i]])
-      others -= dist[keys[i]]
-      labelHolder.push(keys[i])
-    }
-
-    if(others !== 0) {
-      labelHolder.push('Others')
-      dataHolder.push(others)
-    }
-    setLabels(labelHolder)
-    setChartData(dataHolder)  
-  },[data])
+}
 
   var chartOptions = merge(BaseOptionChart(), {
     colors: [
@@ -117,7 +103,7 @@ export default function AppSalesPercentage(props) {
 
   return (
     <Card>
-      <CardHeader title="Top Sales" data-testid={'top sales'}/>
+      <CardHeader title="Expense Percentage" data-testid={'top sales'}/>
       <ChartWrapperStyle dir="ltr">
         <ReactApexChart type="pie" series={chartData} options={chartOptions} height={280} />
       </ChartWrapperStyle>

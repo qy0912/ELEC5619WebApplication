@@ -13,20 +13,20 @@ export default function DashboardLayout(){
         if(cookieMan.getType() === "provider" || cookieMan.getType() === "admin"){
             //go into dashboard
         }else{
-            navigate("/");
+            navigate("/dashboard");
         }
     }, [])
 
     return (
         <Grid container>
             {/* slide tool */}
-            <CssBaseline/>
-            <Grid item xs={2} sm={2} md={2} lg={2}>
+            {/* <CssBaseline/> */}
+            {/* <Grid item xs={2} sm={2} md={2} lg={2}>
                 <DashboardSlideTool />
-            </Grid>
+            </Grid> */}
 
             {/* Middle Part */}
-            <Grid item xs={10} sm={10} md={10} lg={10} sx={{backgroundColor: '#97B597'}}>
+            <Grid item xs={10} sm={10} md={20} lg={20} sx={{backgroundColor: '#97B597'}}>
                 <Paper
                     sx={{
                         margin: '5%',

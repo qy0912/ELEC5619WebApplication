@@ -91,10 +91,16 @@ const Footer = () => {
 
                 <List>
                     <ListItem onClick={()=> navigate("/")} >Home</ListItem>
-                    <ListItem onClick={()=> navigate("/shopping")} >Start Chat</ListItem>
+                    <ListItem onClick={()=> navigate("/chatbox")} >Start Chat</ListItem>
                     <ListItem onClick={()=> navigate("/setting")} >My Account</ListItem>
                     <ListItem onClick={()=> navigate("/")} >History</ListItem>
                     <ListItem onClick={()=> navigate("/help")}>Help</ListItem>
+                    <ListItem onClick={()=> {
+                         if (localStorage.getItem("token") === null) {
+                            navigate("/login")
+                          }
+                          else{navigate("/dashboard")}}
+                        }>My Dashboard</ListItem>
                 </List>
             </Middle>
 
