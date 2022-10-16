@@ -28,6 +28,12 @@ public class CustomUserDetails implements UserDetails {
     this.authorities = authorities;
   }
 
+  public CustomUserDetails(Long id, String username, String password) {
+    this.id = id;
+    this.username = username;
+    this.password = password;
+  }
+
   public static CustomUserDetails createUserDetails(User user) {
     List<GrantedAuthority> grantedAuthorities = user.getRoles().stream()
         .map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(

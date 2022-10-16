@@ -41,7 +41,7 @@ public class UserService {
   @Autowired
   UserRepository userRepository;
 
-  public Boolean checkUserNameAvailable(String username) {
+  public Boolean checkUserNameExists(String username) {
     return userRepository.existsByUsername(username);
   }
 
