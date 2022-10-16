@@ -50,6 +50,11 @@ public class UserService {
         new UsernameNotFoundException("User not found!"));
   }
 
+  public User getUser(Long id) {
+    return userRepository.findById(id).orElseThrow(() ->
+        new UsernameNotFoundException("User not found!"));
+  }
+
   public User createUser(SignupRequest signupRequest) {
     User user = new User(signupRequest.getUsername(), signupRequest.getPassword());
     user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -70,7 +75,7 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public Boolean uploadAvatar(MultipartFile file, CustomUserDetails userDetails) {
+  public User uploadAvatar(MultipartFile file, CustomUserDetails userDetails) {
     User user = userRepository.findById(userDetails.getId()).orElseThrow(() ->
         new UsernameNotFoundException("User not found!"));
     String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -80,11 +85,11 @@ public class UserService {
     try{
       FileUploadUtil.saveFile(profilePhotoSavePath, fileName, file);
     } catch (IOException e){
-      return false;
+      return null;
     }
-    user.setAvatar(profilePhotoMapperPath+fileName);
-    userRepository.save(user);
-    return true;
+    user.setAvatar(profilePhotoMapperPath+"/"+fileName);
+    User savedUser = userRepository.save(user);
+    return savedUser;
   }
 
 }

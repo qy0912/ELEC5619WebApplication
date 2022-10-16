@@ -36,7 +36,6 @@ const Login = () => {
 
     const login = (username,password) => {
         let data = {"username":username,"password":password};
-        console.log(111)
         axios.post('/api/user/login', data)
         .then(res => {
             console.log(res)
@@ -47,8 +46,8 @@ const Login = () => {
                 localStorage.setItem("gender", res.data.gender)
                 localStorage.setItem("avatar", res.data.avatar)
                 localStorage.setItem("theme", res.data.theme)
-                // navigate("/dashboard");
-                // window.location.reload();
+                navigate("/dashboard");
+                window.location.reload();
             }
         })
         .catch(err =>{

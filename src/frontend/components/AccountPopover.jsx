@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
-    Box,
-    Button,
-    Divider,
-    IconButton,
-    MenuItem,
-    Typography,
-    Popover
+  Box,
+  Button,
+  Divider,
+  IconButton,
+  MenuItem,
+  Typography,
+  Popover, Avatar
 } from "@mui/material";
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -21,9 +21,10 @@ const AccountPopover = () => {
     const navigate = useNavigate();
     const accountType = cookieMan.getType()
     const [anchorEl, setAnchorEl] = useState(null);
-    // const avatar = cookieMan.loginUser() === undefined ?
-    //     "/assets/ava_icon.png" :
-    //     "http://localhost:8080/avatar/83e5e9a9-4f34-4cd1-a8a2-27b4e39e6586.png";
+    const avatar = localStorage.getItem("avatar") === null ?
+        "/assets/ava_icon.png" :
+        localStorage.getItem("avatar");
+
     const handleOpen = (e) => {
         setAnchorEl(e.currentTarget);
     }
@@ -107,11 +108,7 @@ const AccountPopover = () => {
                 aria-describedby={id}
                 color="inherit"
             >
-                <img 
-                    src="/assets/ava_icon.png"
-                    // src={avatar}
-                    style={{maxWidth: 25}}
-                />
+              <Avatar src={avatar} />
             </IconButton>
             
             <Popover

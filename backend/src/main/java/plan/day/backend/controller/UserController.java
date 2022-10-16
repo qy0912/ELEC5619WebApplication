@@ -2,6 +2,7 @@ package plan.day.backend.controller;
 
 import io.swagger.annotations.Api;
 import java.io.IOException;
+import java.util.Objects;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,8 +55,7 @@ public class UserController {
   @PostMapping("/signup")
   public ResponseEntity<?> register(@Valid @RequestBody SignupRequest signupRequest){
     if (userService.checkUserNameAvailable(signupRequest.getUsername())) {
-      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"),
-          HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"), HttpStatus.BAD_REQUEST);
     }
     User user = userService.createUser(signupRequest);
     if (user != null) {
@@ -66,10 +66,12 @@ public class UserController {
 
   @PutMapping("/modify")
   public ResponseEntity<?> modify(@Valid @RequestBody UserModifyRequest userModifyRequest, @CurrentUser CustomUserDetails userDetails) {
-    if (userService.checkUserNameAvailable(userModifyRequest.getUsername())) {
-      return new ResponseEntity<>(new GeneralApiResponse(false, "Username already registered!"),
-          HttpStatus.BAD_REQUEST);
+    if (!Objects.equals(userService.getUser(userDetails.getId()).getUsername(), userModifyRequest.getUsername())){
+      if (userService.checkUserNameAvailable(userModifyRequest.getUsername())) {
+        return ResponseEntity.ok(new GeneralApiResponse(false, "Username already registered!"));
+      }
     }
+
     User modifyUser = userService.modifyUser(userModifyRequest, userDetails);
     if (modifyUser!= null) {
       return ResponseEntity.ok(new GeneralApiResponse(true, "User Detail modified!"));
@@ -79,9 +81,9 @@ public class UserController {
 
   @PostMapping("/avatar")
   public ResponseEntity<?> uploadAvatar(@RequestParam MultipartFile avatar, @CurrentUser CustomUserDetails userDetails) throws IOException {
-    Boolean result = userService.uploadAvatar(avatar, userDetails);
-    if (result) {
-      return ResponseEntity.ok(new GeneralApiResponse(true, "Upload Successfully!"));
+    User savedUser = userService.uploadAvatar(avatar, userDetails);
+    if (savedUser != null) {
+      return ResponseEntity.ok(new GeneralApiResponse(true, "Upload Successfully!", savedUser.getAvatar()));
     }
     return ResponseEntity.ok(new GeneralApiResponse(false, "Upload Failed."));
   }

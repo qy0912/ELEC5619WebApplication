@@ -11,4 +11,10 @@ public class GeneralApiResponse {
 
   private String message;
 
+  private Object result;
+
+  public GeneralApiResponse(Boolean success, String message) {
+    this.success = success;
+    this.message = message;
+  }
 }
