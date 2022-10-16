@@ -116,7 +116,7 @@ export default function ChatBox() {
   const classes = useStyles();
   // const [file, setFile] = useState(null);
   // const [imageUrl, setImageUrl] = useState(null);
-  const [text, setText] = useState(null);
+  const [text, setText] = useState("");
   const [msgs, setMsgs] = useState(data);
   const ImageInput = useRef(null);
   const messagesEnd = useRef(null);
@@ -128,8 +128,10 @@ export default function ChatBox() {
   }, [text]);
 
   useEffect(() => {
+
     const timer = setInterval(() => {
       if (respond) {
+        
         setMsgs(msgs.slice(0));
         setR(false);
         if (messagesEnd && messagesEnd.current) {
@@ -150,10 +152,52 @@ export default function ChatBox() {
       is_img: true,
       img: URL.createObjectURL(event.target.files[0]),
     };
+  //external API
+    console.log("The file to be sent is:", event.target.files[0]);
+    // 将图像发送到后端，使用 fetch 或者 axios 都行
+    const FormData = require("form-data");
+    const data = new FormData();
+    data.append('file',event.target.files[0] );
+
+    const options = {
+      method: 'POST',
+      url: 'https://image-to-base64.p.rapidapi.com/imgtob64',
+      headers: {
+        'X-RapidAPI-Key': '8fa618dfaemshcc72d37d2642c5ep1277f8jsn5b46ad4f8d02',
+        'X-RapidAPI-Host': 'image-to-base64.p.rapidapi.com',
+      },
+      data: data
+    };
+
+    axios.request(options).then(function (response) {
+        console.log("image base64 is: ")
+      console.log(response.data);
+
+      let data = {"url": 'data:image/png;base64,'+response.data};
+        
+        axios.post('/api/img/recImg', data)
+            .then(res => {
+              let dolarBody = {
+                user: "Dolars",
+                msg: "res.data.slice(10)",
+                is_img: false,
+              };
+              msgs.push(dolarBody)
+              setR(true)
+                console.log(res);
+            })
+            .catch(err => {
+                console.log(err.data);
+            });
+    }).catch(function (error) {
+      console.error(error);
+    });
+
     msgs.push(body);
     ImageInput.current.value = "";
     setMsgs(msgs);
   };
+ 
   const handlePush = (event) => {
     if (text.length < 1) {
       return;
@@ -206,7 +250,7 @@ export default function ChatBox() {
     setText("");
     setMsgs(msgs);
     // messagesEnd.current.scrollIntoView({ behavior: "smooth" });
-  };
+ };
 
   return (
     <Paper className={classes.root}>

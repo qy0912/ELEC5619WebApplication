@@ -9,7 +9,6 @@ import Summary from "./frontend/components/_dashboard/Summary";
 import React from "react";
 import Help from "./frontend/pages/Help";
 import ChatBox from "./frontend/pages/ChatBox";
-import UploadImg from "./frontend/pages/UploadImg";
 export default function Router() {
   return useRoutes([
     {
@@ -22,7 +21,6 @@ export default function Router() {
         { path: "login", element: <Login /> },
         { path: "register", element: <Register /> },
         { path: "help", element: <Help /> },
-        { path: "uploadimg", element: <UploadImg /> },
         {
           path: "dashboard",
           element: <DashboardLayout />,
