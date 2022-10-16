@@ -15,8 +15,9 @@ import AppMonthlyIncome from './statistic/AppMonthlyIncome';
 import AppTotalExpense from './statistic/AppTotalExpense';
 import AppTotalIncome from './statistic/AppTotalIncome';
 import AppExpense from './statistic/AppExpense';
+import { useNavigate } from 'react-router-dom';
 export default function Summary() {
-
+  const navigate = useNavigate();
     const [weeklyExpense, setWeeklyExpense] = useState(0)
     const [totalExpense, setTotalExpense] = useState(0)
     const [totalIncome,setTotalIncome] = useState(0)
