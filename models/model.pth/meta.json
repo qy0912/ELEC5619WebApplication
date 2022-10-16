@@ -22,9 +22,11 @@
       "add income",
       "add transaction",
       "budget plan",
+      "financial report",
       "my incomes",
       "my transactions",
-      "payment type"
+      "payment type",
+      "summary"
     ]
   },
   "pipeline":[

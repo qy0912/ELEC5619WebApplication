@@ -18,6 +18,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { makeStyles, styled } from "@mui/styles";
 import { useHref, useNavigate } from "react-router-dom";
 import { stringify } from "uuid";
+ 
 
 let data = [
   { user: "Dolars", msg: "hello", is_img: false, is_url: false },
@@ -75,6 +76,7 @@ const Img = styled("img")({
 });
 
 const MsgCard = (input) => {
+  const navigate = useNavigate();
   const classes = useStyles();
   return (
     <Box>
@@ -88,10 +90,10 @@ const MsgCard = (input) => {
               {input.msg.user}
             </Typography>
             {input.msg.is_url ? (
-              <iframe
-                src={input.msg.url}
-                title="W3Schools Free Online Web Tutorials"
-              ></iframe>
+              <IconButton 
+                url={input.msg.url}
+                onClick = {()=>{navigate(input.msg.url)}}
+              > Here is your financial summary report </IconButton>
             ) : input.msg.is_img ? (
               <img src={input.msg.img} />
             ) : (
@@ -111,7 +113,7 @@ const MsgCard = (input) => {
               <Typography variant="body1">{input.msg.msg}</Typography>
             )}
           </Stack>
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+          <Avatar src={localStorage.getItem("avatar")} aria-label="recipe">
             {input.msg.user[0]}
           </Avatar>
         </Stack>
@@ -252,9 +254,7 @@ export default function ChatBox() {
           body.msg = "Here is your information about payment type";
         } else if (cat === "budget plan") {
           body.msg =
-            "Here is your budget plan " + "http://localhost:3000/dashboard";
-          body.url = "http://localhost:3000/dashboard";
-          body.is_url = true;
+            "Here is your budget plan ";
           // navigate('/dashboard')
         } else if (cat === "my transactions") {
           body.msg = "There are your transactions";
@@ -262,8 +262,11 @@ export default function ChatBox() {
           body.msg = "Income is here:";
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
-        } else if (cat === "report") {
-          navigate("/dashboard");
+        } else if (cat === "financial report") {
+          body.msg =
+            "Here is your budget plan ";
+          body.url = "/dashboard";
+          body.is_url = true;
         }
         msgs.push(body);
         setR(true);
