@@ -1,32 +1,32 @@
 import React from 'react';
 import {useEffect, useState} from 'react';
 import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import AppWeeklySales from './statistic/AppWeeklySales';
-import AppSaleIncrease from './statistic/AppSaleIncrease';
+ 
 import { Container } from '@mui/material';
-import AppSales from './statistic/AppSales';
-import AppNewCustomer from './statistic/AppNewCustomer';
-import AppProductSold from './statistic/AppProductSold';
-import AppSalesPercentage from './statistic/AppSalesPercentage';
-import AppNewRegion from './statistic/AppNewRegion';
+import AppExpensePercentage from './statistic/AppExpensePercentage';
+import AppPlanning from './statistic/AppPlanning';
 import axios from 'axios';
 import cookieMan from '../../cookieManager'
 import {Avatar} from '@mui/material'
 import BarChartIcon from '@mui/icons-material//BarChart';
-import {transactionData} from './mockData';
+import AppWeeklyExpense from './statistic/AppWeeklyExpense';
+import AppMonthlyIncome from './statistic/AppMonthlyIncome';
+import AppTotalExpense from './statistic/AppTotalExpense';
+import AppTotalIncome from './statistic/AppTotalIncome';
+import AppExpense from './statistic/AppExpense';
 export default function Summary() {
 
-    const [weeklySales, setWeeklySales] = useState(0)
-    const [saleIncrease, setSaleIncrease] = useState(0)
-    const [productSold, setProductSold] = useState(0)
-    const [customers, setCustomers] = useState(0)
+    const [weeklyExpense, setWeeklyExpense] = useState(0)
+    const [totalExpense, setTotalExpense] = useState(0)
+    const [totalIncome,setTotalIncome] = useState(0)
+    const [monthlyIncome,setMonthlyIncome] = useState(0)
     const [trans, setTrans] = useState([])
-
     useEffect(() => {
-      collectWeeklySales()
-      computeNewCustomers()
+      collectWeeklyExpense()
+      collectTotalExpense()
+      collectTotalIncome()
+      collectMonthlyIncome()
     }, [])
 
     const constructPastDate = (days) => {
@@ -37,86 +37,95 @@ export default function Summary() {
     }
 
     // for weekly sales
-    const collectWeeklySales = () => {
-        let supplierName = cookieMan.loginUser()
+    const collectWeeklyExpense = () => {
         const startDate = constructPastDate(7)
         const endDate = constructPastDate(0)
-        let type = cookieMan.getType()
+       
         const req = {
-          start: "2022-09-16T01:00:53.465Z",
-         finish: "2022-10-18T01:00:53.465Z"
+          start: startDate,
+         finish: endDate
         }
   
         let response = axios.post('/api/transaction/tfilter', req,
-        {headers: {'Authorization': localStorage.getItem("token"), "Content-Type": "multipart/form-data"}})
+        {headers: {'Authorization': localStorage.getItem("token")}})
         .then(res => {
-          var totalSales = 0
+          var totalExpense = 0
           var sold = 0
-          setTrans(res.data.transactions)
-          for(let i = 0; i < res.data.transactions.length; i++) {
-            var trans = res.data.transactions[i]
-            sold += trans.amount
-            totalSales += trans.amount * trans.price
+          setTrans(res.data)
+          console.log(res.data)
+          for(let i = 0; i < res.data.length; i++) {
+            var trans = res.data[i]
+            totalExpense += trans.totalAmount
           }
-          setProductSold(sold)
-          setWeeklySales(totalSales)
-          computeSaleIncrease(totalSales)
+          setWeeklyExpense(totalExpense)
         })
         .catch(err =>{
           console.log(err)
-        })
-
-        
-          
+        }) 
     }
 
-    const computeSaleIncrease = (sales) => {
-        let supplierName = cookieMan.loginUser()
-        const startDate = constructPastDate(14)
-        const endDate = constructPastDate(7)
-        let type = cookieMan.getType()
-
-        const req = {
-          type:type,
-          supplier: supplierName,
-          category: 'all',
-          startdate: startDate,
-          enddate: endDate
-        }
-        let response = axios.post('/api/dashboard/chartInfo/getTransactionsCategory', req)
-        .then(res => {
-          var totalSales = 0
-          for(let i = 0; i < res.data.transactions.length; i++) {
-              var trans = res.data.transactions[i]
-              totalSales += trans.amount * trans.price
-          }
-          setSaleIncrease(sales - totalSales)
-        })
-        .catch(err =>{  
-          console.log(err)
-        })
-    }
-
-    const computeNewCustomers = () => {
-      let supplierName = cookieMan.loginUser()
-      const startDate = constructPastDate(7)
+    const collectMonthlyIncome= () => {
+      const startDate = constructPastDate(30)
       const endDate = constructPastDate(0)
       let type = cookieMan.getType()
       const req = {
-        type:type,
-        supplier: supplierName,
-        startdate: startDate,
-        enddate: endDate
+        start: startDate,
+       finish: endDate
       }
-      let response = axios.post('/api/dashboard/chartInfo/getCustomerNumber', req)
+
+      let response = axios.post('/api/income/filter', req,
+      {headers: {'Authorization': localStorage.getItem("token")}})
       .then(res => {
-        //console.log(res.data)
-        setCustomers(res.data.number)
+        var totalIncome = 0
+        setTrans(res.data)
+        console.log(res.data)
+        for(let i = 0; i < res.data.length; i++) {
+          var trans = res.data[i]
+          totalIncome += trans.totalAmount
+        }
+        setMonthlyIncome(totalIncome)
       })
       .catch(err =>{
         console.log(err)
+      }) 
+  }
+    //
+    const collectTotalExpense = () => {
+      let response = axios.get('/api/transaction/',
+      {headers: {'Authorization': localStorage.getItem("token")}})
+      .then(res => {
+        var totalExpense = 0
+        setTrans(res.data)
+        console.log(res.data)
+        for(let i = 0; i < res.data.length; i++) {
+          var trans = res.data[i]
+          totalExpense += trans.totalAmount
+        }
+        setTotalExpense(totalExpense)
       })
-    }
+      .catch(err =>{
+        console.log(err)
+      }) 
+  }
+  const collectTotalIncome = () => {
+    let response = axios.get('/api/income/',
+    {headers: {'Authorization': localStorage.getItem("token")}})
+    .then(res => {
+      var totalIncome = 0
+      var sold = 0
+      setTrans(res.data)
+      console.log(res.data)
+      for(let i = 0; i < res.data.length; i++) {
+        var trans = res.data[i]
+        totalIncome+= trans.totalAmount
+      }
+      setTotalIncome(totalIncome)
+    })
+    .catch(err =>{
+      console.log(err)
+    }) 
+} 
+ 
 
     return (
       <div>
@@ -140,35 +149,33 @@ export default function Summary() {
             </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} lg = {3}>
-            <AppWeeklySales 
-              saleNumber={weeklySales}
+            <AppWeeklyExpense
+              expenseNumber={weeklyExpense}
             />
           </Grid>
           <Grid item xs={12} sm={6} lg = {3}>
-          <AppSaleIncrease
-            saleIncrease={saleIncrease}
+          <AppMonthlyIncome
+            income={monthlyIncome}
           />
           </Grid>
           <Grid item xs={12} sm={6} lg = {3}>
-          <AppNewCustomer  amount="22" 
-            customers = {customers}
+          <AppTotalExpense 
+            amount = {totalExpense}
           />
           </Grid>
           <Grid item xs={12} sm={6} lg = {3}>
-          <AppProductSold
-            amountSold={productSold}
+          <AppTotalIncome
+            amount={totalIncome}
           />
           </Grid>
           <Grid item xs={12} md={7} lg={8}>
-            <AppNewRegion/>
+            <AppPlanning/>
           </Grid>
           <Grid item xs={12} md={5} lg={4}>
-            <AppSalesPercentage
-              data={trans}
-            />
+            <AppExpensePercentage/>
           </Grid>
           <Grid item xs={12} md={12} lg={12}>
-            <AppSales/>
+            <AppExpense/>
           </Grid>
         </Grid>
       </Container>

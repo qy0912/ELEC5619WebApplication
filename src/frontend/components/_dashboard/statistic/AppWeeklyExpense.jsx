@@ -1,16 +1,17 @@
 // material
-import { styled } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import { Card, Typography } from '@mui/material';
-import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
-import {alpha} from "@mui/material/styles";
+import { styled } from '@mui/material';
 
+// utils
+import AttachMoneyRoundedIcon from '@mui/icons-material/AttachMoneyRounded';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Card)(({ theme }) => ({
-  textAlign: 'center',
+    textAlign: 'center',
   padding: theme.spacing(3, 0),
-  color: '#7A0C2E',
-  backgroundColor: '#FFE7D9'
+  color: '#005249',
+  backgroundColor: '#C8FACD'
 }));
 
 const IconWrapperStyle = styled('div')(({ theme }) => ({
@@ -22,9 +23,9 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   height: theme.spacing(8),
   justifyContent: 'center',
   marginBottom: theme.spacing(3),
-  color: '#7A0C2E',
+  color: '#005249',
   backgroundImage: `linear-gradient(135deg, ${alpha(theme.palette.primary.dark, 0)} 0%, ${alpha(
-    '#7A0C2E',
+    '#005249',
     0.24
   )} 100%)`
 }));
@@ -33,16 +34,16 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
 
 const TOTAL = 714000;
 
-export default function AppProductSold(props) {
-  const {amountSold} = props
+export default function AppWeeklyExpense(props) {
+  const {expenseNumber} = props
   return (
     <RootStyle>
       <IconWrapperStyle>
-        <ShoppingCartRoundedIcon/>
+        <AttachMoneyRoundedIcon/>
       </IconWrapperStyle>
-      <Typography variant="h3">{amountSold}</Typography>
-      <Typography variant="subtitle2" sx={{ opacity: 0.72 }} data-testid={"product sold"}>
-        Products Sold
+      <Typography variant="h3">${expenseNumber}</Typography>
+      <Typography variant="subtitle2" sx={{ opacity: 0.72 }} data-testid={"weekly sales"}>
+        Weekly Expense
       </Typography>
     </RootStyle>
   );

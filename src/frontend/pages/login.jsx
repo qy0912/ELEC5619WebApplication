@@ -46,7 +46,7 @@ const Login = () => {
                 localStorage.setItem("gender", res.data.gender)
                 localStorage.setItem("avatar", res.data.avatar)
                 localStorage.setItem("theme", res.data.theme)
-                navigate("/dashboard");
+                navigate("/");
                 window.location.reload();
             }
         })
