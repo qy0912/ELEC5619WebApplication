@@ -95,8 +95,7 @@ const MsgCard = (input) => {
                   navigate(input.msg.url);
                 }}
               >
-                {" "}
-                Here is your financial summary report{" "}
+                Here is your financial summary report
               </IconButton>
             ) : input.msg.is_img ? (
               <img src={input.msg.img} />
@@ -429,6 +428,10 @@ export default function ChatBox() {
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
         } else if (cat === "financial report") {
+          body.msg = "Here is your budget plan ";
+          body.url = "/dashboard";
+          body.is_url = true;
+        }else if (cat === "summary") {
           body.msg = "Here is your budget plan ";
           body.url = "/dashboard";
           body.is_url = true;
