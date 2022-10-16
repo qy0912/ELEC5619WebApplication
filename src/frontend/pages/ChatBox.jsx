@@ -156,14 +156,38 @@ export default function ChatBox() {
         { words: text },
         {
           headers: {
-            "Authorization": localStorage.getItem("token")
+            Authorization: localStorage.getItem("token"),
           },
         }
       )
       .then((res) => {
-        console.log(res);
+        let cat = res.data.response[0];
+        let body = {
+          user: "Dolars",
+          msg: undefined,
+          is_img: false,
+        };
+        console.log(cat);
+        if (cat === "add transaction") {
+          body.msg =
+            "Please provide your transaction information(type, data, paied)";
+        } else if (cat === "add income") {
+          body.msg =
+            "Please provide your income information(type, data, paied)";
+        } else if (cat === "payment type") {
+          body.msg = "Here is your information about payment type";
+        } else if (cat === "budget plan") {
+          body.msg = "Here is your budget plan";
+        } else if (cat === "my transactions") {
+          body.msg = "There are your transactions";
+        } else if (cat === "my incomes") {
+          body.msg = "Income is here:";
+        } else if (cat === "Unrecognized") {
+          body.msg = "I can not understand you, I am just a bot";
+        }
+        msgs.push(body);
+        setMsgs(msgs);
       });
-
     setText("");
     setMsgs(msgs);
     // messagesEnd.current.scrollIntoView({ behavior: "smooth" });
