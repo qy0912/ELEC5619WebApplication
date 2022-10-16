@@ -47,7 +47,7 @@ function UserSetting() {
 
     const backToLogin = (e) => {
         e.preventDefault()
-        navigate("/dashboard");
+        navigate("/");
     }
 
     const handleGenderChange = (event) => {
