@@ -8,6 +8,7 @@ import {
   TextField,
   IconButton,
   List,
+  linkClasses,
 } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 
@@ -15,6 +16,8 @@ import { red } from "@mui/material/colors";
 import axios from "axios";
 import React, { useState, useEffect, useRef } from "react";
 import { makeStyles, styled } from "@mui/styles";
+import { useHref, useNavigate } from 'react-router-dom';
+import { stringify } from "uuid";
 
 let data = [
   { user: "Dolars", msg: "hello", is_img: false },
@@ -113,6 +116,7 @@ const MsgCard = (input) => {
 };
 
 export default function ChatBox() {
+  const navigate = useNavigate()
   const classes = useStyles();
   // const [file, setFile] = useState(null);
   // const [imageUrl, setImageUrl] = useState(null);
@@ -236,13 +240,17 @@ export default function ChatBox() {
         } else if (cat === "payment type") {
           body.msg = "Here is your information about payment type";
         } else if (cat === "budget plan") {
-          body.msg = "Here is your budget plan";
+          body.msg = "Here is your budget plan "+ "http://localhost:3000/dashboard";
+          // navigate('/dashboard')
         } else if (cat === "my transactions") {
           body.msg = "There are your transactions";
         } else if (cat === "my incomes") {
           body.msg = "Income is here:";
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
+        }
+        else if (cat === "report") {
+          navigate('/dashboard')
         }
         msgs.push(body);
         setR(true);
