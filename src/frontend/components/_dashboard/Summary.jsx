@@ -54,7 +54,7 @@ export default function Summary() {
           var totalExpense = 0
           var sold = 0
           setTrans(res.data)
-          console.log(res.data)
+        
           for(let i = 0; i < res.data.length; i++) {
             var trans = res.data[i]
             totalExpense += trans.totalAmount
@@ -80,7 +80,7 @@ export default function Summary() {
       .then(res => {
         var totalIncome = 0
         setTrans(res.data)
-        console.log(res.data)
+    
         for(let i = 0; i < res.data.length; i++) {
           var trans = res.data[i]
           totalIncome += trans.totalAmount
@@ -98,7 +98,7 @@ export default function Summary() {
       .then(res => {
         var totalExpense = 0
         setTrans(res.data)
-        console.log(res.data)
+   
         for(let i = 0; i < res.data.length; i++) {
           var trans = res.data[i]
           totalExpense += trans.totalAmount
@@ -116,7 +116,7 @@ export default function Summary() {
       var totalIncome = 0
       var sold = 0
       setTrans(res.data)
-      console.log(res.data)
+ 
       for(let i = 0; i < res.data.length; i++) {
         var trans = res.data[i]
         totalIncome+= trans.totalAmount

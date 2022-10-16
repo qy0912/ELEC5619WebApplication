@@ -172,7 +172,7 @@ export default function ChatBox() {
       img: URL.createObjectURL(event.target.files[0]),
     };
     //external API
-    console.log("The file to be sent is:", event.target.files[0]);
+   
     // 将图像发送到后端，使用 fetch 或者 axios 都行
     const FormData = require("form-data");
     const data = new FormData();
@@ -191,9 +191,7 @@ export default function ChatBox() {
     axios
       .request(options)
       .then(function (response) {
-        console.log("image base64 is: ");
-        console.log(response.data);
-
+        
         let data = { url: "data:image/png;base64," + response.data };
 
         axios
@@ -208,9 +206,7 @@ export default function ChatBox() {
             };
             msgs.push(dolarBody);
             setR(true);
-            console.log(res);
-
-            console.log(result[0])
+          
             const newTran = {
               source: result[1],
               category_name: result[1],
@@ -225,9 +221,7 @@ export default function ChatBox() {
               },
             })
             .then((res) => {
-              // msgs.push(dolarBody);
-              // setR(true);
-              console.log(res);
+             
             })
             .catch((err) => {
               console.log(err.data);
@@ -298,7 +292,7 @@ export default function ChatBox() {
           is_img: false,
           is_url: false,
         };
-        console.log(cat);
+        
         if (cat === "add transaction") {
           //   "Please provide your transaction information as Add transaction,source, amount, category";
           if (checkUserInput(tempMsg, 4) == true) {
