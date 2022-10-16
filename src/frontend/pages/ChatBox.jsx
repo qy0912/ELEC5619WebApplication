@@ -156,8 +156,7 @@ export default function ChatBox() {
         { words: text },
         {
           headers: {
-            Authorization: localStorage.getItem("token"),
-            "Content-Type": "multipart/form-data",
+            "Authorization": localStorage.getItem("token")
           },
         }
       )
@@ -165,7 +164,7 @@ export default function ChatBox() {
         console.log(res);
       });
 
-    text = "";
+    setText("");
     setMsgs(msgs);
     // messagesEnd.current.scrollIntoView({ behavior: "smooth" });
   };
