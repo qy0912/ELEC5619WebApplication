@@ -49,7 +49,7 @@ public class TransactionController {
           @CurrentUser CustomUserDetails userDetails) {
 
     List<Transaction> transaction  = transactionService.listTransaction(userDetails.getId());
-    return ResponseEntity.ok(transaction);
+    return ResponseEntity.ok(new TransactionUtil().TransactionParser(transaction));
   }
 
   @GetMapping(value = "/{category_name}")

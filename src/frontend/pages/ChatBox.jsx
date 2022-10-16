@@ -18,7 +18,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { makeStyles, styled } from "@mui/styles";
 import { useHref, useNavigate } from "react-router-dom";
 import { stringify } from "uuid";
- 
 
 let data = [
   { user: "Dolars", msg: "hello", is_img: false, is_url: false },
@@ -90,10 +89,15 @@ const MsgCard = (input) => {
               {input.msg.user}
             </Typography>
             {input.msg.is_url ? (
-              <IconButton 
+              <IconButton
                 url={input.msg.url}
-                onClick = {()=>{navigate(input.msg.url)}}
-              > Here is your financial summary report </IconButton>
+                onClick={() => {
+                  navigate(input.msg.url);
+                }}
+              >
+                {" "}
+                Here is your financial summary report{" "}
+              </IconButton>
             ) : input.msg.is_img ? (
               <img src={input.msg.img} />
             ) : (
@@ -128,7 +132,12 @@ export default function ChatBox() {
   // const [file, setFile] = useState(null);
   // const [imageUrl, setImageUrl] = useState(null);
   const [text, setText] = useState("");
-  const [msgs, setMsgs] = useState(data);
+  if (localStorage.getItem("chathistory") === null) {
+    localStorage.setItem("chathistory", JSON.stringify([]));
+  }
+  const [msgs, setMsgs] = useState(
+    JSON.parse(localStorage.getItem("chathistory"))
+  );
   const ImageInput = useRef(null);
   const messagesEnd = useRef(null);
   const [respond, setR] = useState(false);
@@ -136,13 +145,14 @@ export default function ChatBox() {
     if (messagesEnd && messagesEnd.current) {
       messagesEnd.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [text]);
+  }, [text, msgs]);
 
   useEffect(() => {
     const timer = setInterval(() => {
       if (respond) {
         setMsgs(msgs.slice(0));
         setR(false);
+        localStorage.setItem("chathistory", JSON.stringify(msgs));
         if (messagesEnd && messagesEnd.current) {
           messagesEnd.current.scrollIntoView({ behavior: "smooth" });
         }
@@ -190,9 +200,10 @@ export default function ChatBox() {
         axios
           .post("/api/img/recImg", data)
           .then((res) => {
+            let result = res.data.message.split(" ");
             let dolarBody = {
               user: "Dolars",
-              msg: "res.data.slice(10)",
+              msg: "You have use " + result[0] + " dolars on " + result[1],
               is_img: false,
               is_url: false,
             };
@@ -212,6 +223,27 @@ export default function ChatBox() {
     ImageInput.current.value = "";
     setMsgs(msgs);
   };
+  const checkUserInput = (input, l) => {
+    try {
+      const inputList = input.split(",");
+      if (inputList.length === l) {
+        return true;
+      }
+      return false;
+    } catch (err) {
+      return false;
+    }
+  };
+  const handelUserTransaction = (input) => {
+    const msgList = input.split(",");
+    const res = {
+      source: msgList[1],
+      totalAmount: Number(msgList[2]),
+      category_name: msgList[3],
+      description: "description: buying " + msgList[3] + " cost $" + msgList[2],
+    };
+    return res;
+  };
 
   const handlePush = (event) => {
     if (text.length < 1) {
@@ -225,11 +257,11 @@ export default function ChatBox() {
       is_url: false,
     };
     msgs.push(body);
-
+    let tempMsg = body.msg;
     let detail = axios
       .post(
         "/api/dolars/classification",
-        { words: text },
+        { words: text.split(",")[0] },
         {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -244,27 +276,137 @@ export default function ChatBox() {
           is_img: false,
           is_url: false,
         };
+        console.log(cat);
         if (cat === "add transaction") {
-          body.msg =
-            "Please provide your transaction information(type, data, paied)";
+          //   "Please provide your transaction information as Add transaction,source, amount, category";
+          if (checkUserInput(tempMsg, 4) == true) {
+            let req = handelUserTransaction(tempMsg);
+            if (isNaN(req.totalAmount)) {
+              body.msg =
+                "Please provide your transaction information as Add transactions,source,amount,category";
+            } else {
+              let res = axios
+                .post(
+                  "/api/transaction/create",
+                  handelUserTransaction(tempMsg),
+                  { headers: { Authorization: localStorage.getItem("token") } }
+                )
+                .then((res) => {
+                  body.msg = "Successful upload your transaction!";
+                });
+            }
+          } else {
+            body.msg =
+              "Please provide your transaction information as Add transactions,source,amount,category";
+          }
         } else if (cat === "add income") {
-          body.msg =
-            "Please provide your income information(type, data, paied)";
+          body.msg = "Please provide your income";
+          if (checkUserInput(tempMsg, 3) == true) {
+            const msgList = tempMsg.split(",");
+            const req = {
+              source: msgList[1],
+              totalAmount: Number(msgList[2]),
+            };
+            if (isNaN(req.totalAmount)) {
+              body.msg =
+                "Please provide your income information as Add income,source,amount";
+            } else {
+              let res = axios
+                .post("/api/income/add", req, {
+                  headers: { Authorization: localStorage.getItem("token") },
+                })
+                .then((res) => {
+                  body.msg = "Successful upload your income!";
+                });
+            }
+          } else {
+            body.msg =
+              "Please provide your income information as Add income,source,amount";
+          }
         } else if (cat === "payment type") {
           body.msg = "Here is your information about payment type";
         } else if (cat === "budget plan") {
-          body.msg =
-            "Here is your budget plan ";
-          // navigate('/dashboard')
+          body.msg = "Here is your budget plan ";
+          let res = axios
+            .post(
+              "/api/transaction/planning",
+              { range: "MONTHLY" },
+              { headers: { Authorization: localStorage.getItem("token") } }
+            )
+            .then((res) => {
+              const category = res.data.catergory_plan;
+              let re_msg = "You are supposed to spend ";
+              for (let i = 0; i < category.length; i++) {
+                re_msg +=
+                  "$" +
+                  category[i].planed_spend.toFixed(2) +
+                  " on " +
+                  category[i].catergory_name +
+                  "\n";
+              }
+              re_msg += "in next month!";
+              body.msg = re_msg;
+            });
         } else if (cat === "my transactions") {
-          body.msg = "There are your transactions";
+          body.msg = "There are your lastest 5 transactions:";
+          let res = axios
+            .get("/api/transaction/", {
+              headers: { Authorization: localStorage.getItem("token") },
+            })
+            .then((res) => {
+              const items = res.data;
+              let l = 5;
+              if (items.length < 5) {
+                l = items.length;
+              }
+              let re_msg = "";
+              for (let i = 0; i < l; i++) {
+                re_msg +=
+                  "Spend " +
+                  "$" +
+                  items[items.length - i - 1].totalAmount.toFixed(2) +
+                  " on " +
+                  items[items.length - i - 1].source +
+                  " which in category" +
+                  items[items.length - i - 1].category +
+                  "\n";
+              }
+              body.msg = re_msg;
+            })
+            .catch((err) => {
+              body.msg = "Empty transaction history!";
+            });
         } else if (cat === "my incomes") {
-          body.msg = "Income is here:";
+          body.msg = "There are your lastest 5 incomes:";
+          let res = axios
+            .get("/api/income/", {
+              headers: { Authorization: localStorage.getItem("token") },
+            })
+            .then((res) => {
+              const items = res.data;
+              let re_msg = "";
+              let l = 5;
+              if (items.length < 5) {
+                l = items.length;
+              }
+              for (let i = 0; i < l; i++) {
+                re_msg +=
+                  "Earn " +
+                  "$" +
+                  items[items.length - i - 1].totalAmount.toFixed(2) +
+                  " on " +
+                  items[items.length - i - 1].source +
+                  "\n";
+              }
+              body.msg = re_msg;
+            })
+            .catch((err) => {
+              body.msg = "Empty income history!";
+            });
         } else if (cat === "Unrecognized") {
           body.msg = "I can not understand you, I am just a bot";
         } else if (cat === "financial report") {
-          body.msg =
-            "Here is your budget plan ";
+          body.msg = "Here is your budget plan ";
           body.url = "/dashboard";
           body.is_url = true;
         }
