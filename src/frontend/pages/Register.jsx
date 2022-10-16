@@ -2,16 +2,12 @@ import React, {useState} from 'react';
 import axios from 'axios';
 import {
     Button,
-    Checkbox,
     Container,
     CssBaseline,
-    FormControlLabel,
     Grid,
     Link,
     Typography,
     Avatar,
-    Switch,
-    MenuItem,
     TextField, Alert, Snackbar
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
@@ -38,7 +34,6 @@ const Register = () => {
     const [nameError, setNameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
     const [confirmError, setConfirmError] = useState(false);
-   // const [emailError, setEmailError] = useState(false);
     const [nameDesc, setNameDesc] = useState('');
      
     const [passwordDesc, setPasswordDesc] = useState('');
@@ -46,11 +41,6 @@ const Register = () => {
     const [openAlert, setOpenAlert] = useState(false);
     const [message, setMessage] = useState('');
     const [color, setColor] = useState('success');
-    // const [code, setCode] = useState('');
-    // const [enterCode, setEnterCode] = useState('');
-    // const [codeActive, setCodeActive] = useState(false);
-    // const [enterCodeError, setEnterCodeError] = useState(false);
-    // const [enterCodeDesc, setEnterCodeDesc] = useState('');
 
     const signup = (username, password) => {
         if (validateAll() === true){
@@ -58,7 +48,6 @@ const Register = () => {
             axios.post('/api/user/signup', data)
                 .then(res => {
                     if (res.data.message === "User registered!") {
-                        
                         setOpenAlert(true);
                         setMessage("Successfully Sign up Welcome!");
                         navigate("/login");
@@ -73,14 +62,12 @@ const Register = () => {
         } 
     }
 
-
     const handleClose = (event, reason) => {
         if (reason === "clickaway"){
             return;
         }
         setOpenAlert(false);
     }
-
 
      const validateAll = () => {
         let pass = true;
@@ -90,14 +77,11 @@ const Register = () => {
             pass = false;
         }
 
-         
-
         if (password === '') {
             setPasswordError(true)
             setPasswordDesc('Password cannot be empty');
             pass = false;
         }
-
 
         if (password !== confirm) {
             setConfirmError(true);
@@ -105,12 +89,8 @@ const Register = () => {
             pass = false;
         }
 
-         
         return pass;
     }
-
-    
- 
 
     const handleChangeName = (event) => {
         if (event.target.value !== ''){
@@ -122,8 +102,6 @@ const Register = () => {
             setNameDesc('Username cannot be empty');
         }
     }
-
-     
 
     const handleChangePassword = (event) => {
         if (event.target.value !== '' && event.target.value.length >= 6 && event.target.value.length <= 15) {
@@ -237,12 +215,6 @@ const Register = () => {
                                     />
                                 </Grid>
 
-                                <Grid item xs={12}>
-                                    <FormControlLabel
-                                        control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                        label="I want to receive inspiration, marketing promotions and updates via email."
-                                    />
-                                </Grid>
                             </Grid>
                         </form>
 

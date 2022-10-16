@@ -10,7 +10,7 @@ export const sliderItems = [
     {
         id: 2,
         img: "https://techcult.com/wp-content/uploads/2022/02/Best-AI-Chatbot-Online-2.jpg",
-        title: "Easier Communication",
+        title: "Easier Communicate",
         titleColor: '33201C',
         desc: 'Just simply chat with your housekeeper, it will provide all you need',
         bg: 'e0b17b'

@@ -115,8 +115,21 @@ const Slider = () => {
             <Wrapper slideIndex={slideIndex}>
                 {sliderItems.map((item) => (
                     <Slide bg={item.bg} key={item.id}>
-                        <ImageContainer>
-                            <Image src={item.img}/>
+                        <ImageContainer
+                            sx = {{
+                              marginTop: 5,
+                              marginBottom: 4,
+                              height: "100px",
+                              width: '30px',
+                            }} >
+                            <Image src={item.img}
+                            width={920}
+                            sx = {{
+                              marginTop: 5,
+                              marginBottom: 4,
+                              height: "100px",
+                              width: '30px',
+                            }}/>
                         </ImageContainer>
                         <InfoContainer>
                             <Title titleColor={item.titleColor}>{item.title}</Title>
@@ -125,7 +138,7 @@ const Slider = () => {
                               marginBottom: 4,
                               color: '#' + item.titleColor,
                               fontSize: '1.4vw',
-                              fontWeight: '400',
+                              fontWeight: '300',
                               letterSpacing: '1.5px'
                             }}>{item.desc}</Typography>
                             <Button variant='outlined' onClick={() => handleClickButton()}
