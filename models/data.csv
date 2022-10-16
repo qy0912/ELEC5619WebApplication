@@ -1,8 +1,26 @@
 label,text
-hello,hello
-hello,good morning
-hello,hi
-help,help
-help,help me
-help,how to interact with you
-help,do me a favour
+add transaction,add transaction 
+add transaction,another transaction 
+add transaction,I have new transactions 
+add transaction,new transaction 
+add income,add income
+add income,another income
+add income,I have new income
+add income,new income
+payment type,Which type of payment do I pay most?
+payment type,payment type
+payment type,Take a look on payment type
+budget plan,give me my budget plan
+budget plan,show me my budget plan
+budget plan,my budget plan
+budget plan,See my budget plan
+my transactions,see my transactions
+my transactions,check on my transaction
+my transactions,Take a look on transaction
+my transactions,What about my transaction
+my incomes,see my income
+my incomes,check on my income
+my incomes,Take a look on income
+my incomes,What about my income
+Unrecognized, i am good
+Unrecognized,you are cool
