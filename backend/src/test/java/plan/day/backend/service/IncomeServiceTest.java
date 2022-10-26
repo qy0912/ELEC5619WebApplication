@@ -104,5 +104,9 @@ public class IncomeServiceTest {
     BudgetPlanningRequest budgetPlanningRequest = new BudgetPlanningRequest();
     budgetPlanningRequest.range = BudgetPlanningRange.MONTHLY;
     assertNotEquals(0, incomeService.listIncomeWithRange(budgetPlanningRequest, userDetails).size());
+    budgetPlanningRequest.range = BudgetPlanningRange.YEARLY;
+    assertNotEquals(0, incomeService.listIncomeWithRange(budgetPlanningRequest, userDetails).size());
+    budgetPlanningRequest.range = BudgetPlanningRange.WEEKLY;
+    assertNotEquals(0, incomeService.listIncomeWithRange(budgetPlanningRequest, userDetails).size());
   }
 }

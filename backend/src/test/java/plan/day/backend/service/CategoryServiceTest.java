@@ -29,4 +29,9 @@ public class CategoryServiceTest {
     assertEquals("test", category.getCategory_name());
     assertEquals("test", category.getDescription());
   }
+
+  @Test
+  public void tett(){
+    System.out.println(Double.MIN_VALUE);
+  }
 }
