@@ -29,5 +29,4 @@ public class CategoryServiceTest {
     assertEquals("test", category.getCategory_name());
     assertEquals("test", category.getDescription());
   }
-
 }
