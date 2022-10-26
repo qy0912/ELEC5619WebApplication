@@ -30,8 +30,4 @@ public class CategoryServiceTest {
     assertEquals("test", category.getDescription());
   }
 
-  @Test
-  public void tett(){
-    System.out.println(Double.MIN_VALUE);
-  }
 }
